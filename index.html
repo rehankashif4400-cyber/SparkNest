@@ -10,6 +10,7 @@
     gtag('config', 'GA_MEASUREMENT_ID');
   </script>
   <meta charset="UTF-8">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SparkNest — AI Learning Tools & Educational Resources</title>
   <meta name="description" content="The future of children's learning starts here. Honest reviews of AI tutors, educational toys, and free resources for parents.">
@@ -46,7 +47,7 @@
       background: var(--void);
       color: var(--text-primary);
       overflow-x: hidden;
-      cursor: none;
+      cursor: auto;
       min-height: 100vh;
     }
 
@@ -63,20 +64,7 @@
       -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
     }
 
-    .cursor {
-      position: fixed; width: 12px; height: 12px; border-radius: 50%;
-      background: var(--primary); pointer-events: none; z-index: 9999;
-      transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s;
-      box-shadow: 0 0 10px var(--primary), 0 0 30px var(--primary), 0 0 60px rgba(0,229,195,0.3);
-      mix-blend-mode: screen;
-    }
-    .cursor.hover { width: 40px; height: 40px; background: rgba(0,229,195,0.2); border: 2px solid var(--primary); }
-
-    .cursor-trail {
-      position: fixed; width: 6px; height: 6px; border-radius: 50%;
-      background: var(--primary); pointer-events: none; z-index: 9998;
-      opacity: 0.6; transform: translate(-50%, -50%); box-shadow: 0 0 8px var(--primary);
-    }
+    
 
     .ticker-wrap {
       width: 100%; overflow: hidden; background: rgba(6,8,15,0.95);
@@ -118,13 +106,13 @@
     .nav-cta {
       padding: 10px 24px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500;
       color: var(--void); background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border: none; border-radius: 12px; cursor: none; position: relative; overflow: hidden;
+      border: none; border-radius: 12px; cursor: auto; position: relative; overflow: hidden;
       transition: all 0.3s ease; letter-spacing: 0.5px;
     }
     .nav-cta::after { content: ''; position: absolute; inset: -2px; border-radius: 14px; background: linear-gradient(135deg, var(--primary), var(--secondary)); opacity: 0; filter: blur(12px); transition: opacity 0.3s ease; z-index: -1; }
     .nav-cta:hover { transform: translateY(-2px); box-shadow: var(--glow-primary); }
     .nav-cta:hover::after { opacity: 0.6; }
-    .mobile-menu-btn { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: none; padding: 8px; }
+    .mobile-menu-btn { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: auto; padding: 8px; }
     .mobile-menu-btn span { display: block; width: 24px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: all 0.3s ease; }
 
     .hero {
@@ -149,7 +137,7 @@
     .btn-primary {
       position: relative; padding: 16px 36px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500;
       color: var(--void); background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border: none; border-radius: 14px; cursor: none; overflow: hidden;
+      border: none; border-radius: 14px; cursor: auto; overflow: hidden;
       transition: all 0.4s cubic-bezier(0.16,1,0.3,1); letter-spacing: 0.5px; text-decoration: none;
       display: inline-flex; align-items: center; gap: 8px;
     }
@@ -160,7 +148,7 @@
     .btn-secondary {
       position: relative; padding: 16px 36px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 400;
       color: var(--text-primary); background: transparent; border: 1px solid var(--border); border-radius: 14px;
-      cursor: none; overflow: hidden; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); letter-spacing: 0.5px;
+      cursor: auto; overflow: hidden; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); letter-spacing: 0.5px;
       text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
     }
     .btn-secondary::before { content: ''; position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(135deg, var(--primary-dim), var(--secondary-dim)); opacity: 0; transition: opacity 0.4s ease; z-index: -1; }
@@ -197,7 +185,7 @@
     .category-card {
       position: relative; padding: 40px 32px; background: var(--surface); border: 1px solid var(--border);
       border-radius: 20px; overflow: hidden; transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
-      cursor: none; transform-style: preserve-3d; perspective: 1000px;
+      cursor: auto; transform-style: preserve-3d; perspective: 1000px;
     }
     .category-card::before {
       content: ''; position: absolute; inset: 0; border-radius: 20px; padding: 1px;
@@ -221,7 +209,7 @@
     .category-card .card-link:hover svg { transform: translateX(4px); }
 
     .reviews-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .review-card { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; transition: all 0.5s cubic-bezier(0.16,1,0.3,1); cursor: none; }
+    .review-card { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; transition: all 0.5s cubic-bezier(0.16,1,0.3,1); cursor: auto; }
     .review-card:hover { transform: translateY(-6px); border-color: rgba(139,128,255,0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.35), var(--glow-secondary); }
     .review-card .review-image { width: 100%; height: 200px; background: linear-gradient(135deg, var(--surface-elevated), var(--surface)); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
     .review-card .review-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, var(--surface) 100%); }
@@ -284,7 +272,7 @@
       .footer-grid { grid-template-columns: 1fr; gap: 30px; }
       .cta-container { padding: 50px 30px; }
       body { cursor: auto; }
-      .cursor, .cursor-trail { display: none; }
+      
     }
   </style>
 <base target="_blank">
@@ -296,8 +284,7 @@
   <canvas id="mesh-canvas"></canvas>
   <div class="grid-overlay"></div>
 
-  <!-- Custom Cursor -->
-  <div class="cursor" id="cursor"></div>
+  
 
   <!-- Neural Ticker -->
   <div class="ticker-wrap">
@@ -777,7 +764,7 @@
       mouseY = e.clientY;
     });
 
-    function updateCursor() {
+     {
       cursor.style.left = mouseX + 'px';
       cursor.style.top = mouseY + 'px';
       trails.forEach((t, i) => {
@@ -789,7 +776,7 @@
         t.el.style.opacity = (1 - i / maxTrails) * 0.5;
         t.el.style.transform = `translate(-50%, -50%) scale(${1 - i / maxTrails * 0.5})`;
       });
-      requestAnimationFrame(updateCursor);
+      
     }
     updateCursor();
 

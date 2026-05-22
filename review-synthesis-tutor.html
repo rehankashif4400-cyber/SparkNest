@@ -10,6 +10,7 @@
     gtag('config', 'GA_MEASUREMENT_ID');
   </script>
   <meta charset="UTF-8">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SparkNest — Synthesis Tutor Review | AI Math Tutor for Kids</title>
   <meta name="description" content="Honest, parent-tested review of Synthesis Tutor. Backed by 200+ real parent experiences.">
@@ -45,7 +46,7 @@
       background: var(--void);
       color: var(--text-primary);
       overflow-x: hidden;
-      cursor: none;
+      cursor: auto;
       min-height: 100vh;
     }
 
@@ -62,20 +63,7 @@
       -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
     }
 
-    .cursor {
-      position: fixed; width: 12px; height: 12px; border-radius: 50%;
-      background: var(--primary); pointer-events: none; z-index: 9999;
-      transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s;
-      box-shadow: 0 0 10px var(--primary), 0 0 30px var(--primary), 0 0 60px rgba(0,229,195,0.3);
-      mix-blend-mode: screen;
-    }
-    .cursor.hover { width: 40px; height: 40px; background: rgba(0,229,195,0.2); border: 2px solid var(--primary); }
-
-    .cursor-trail {
-      position: fixed; width: 6px; height: 6px; border-radius: 50%;
-      background: var(--primary); pointer-events: none; z-index: 9998;
-      opacity: 0.6; transform: translate(-50%, -50%); box-shadow: 0 0 8px var(--primary);
-    }
+    
 
     .ticker-wrap {
       width: 100%; overflow: hidden; background: rgba(6,8,15,0.95);
@@ -117,13 +105,13 @@
     .nav-cta {
       padding: 10px 24px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500;
       color: var(--void); background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border: none; border-radius: 12px; cursor: none; position: relative; overflow: hidden;
+      border: none; border-radius: 12px; cursor: auto; position: relative; overflow: hidden;
       transition: all 0.3s ease; letter-spacing: 0.5px; text-decoration: none; display: inline-flex; align-items: center;
     }
     .nav-cta::after { content: ''; position: absolute; inset: -2px; border-radius: 14px; background: linear-gradient(135deg, var(--primary), var(--secondary)); opacity: 0; filter: blur(12px); transition: opacity 0.3s ease; z-index: -1; }
     .nav-cta:hover { transform: translateY(-2px); box-shadow: var(--glow-primary); }
     .nav-cta:hover::after { opacity: 0.6; }
-    .mobile-menu-btn { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: none; padding: 8px; }
+    .mobile-menu-btn { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: auto; padding: 8px; }
     .mobile-menu-btn span { display: block; width: 24px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: all 0.3s ease; }
 
     .page-hero {
@@ -190,7 +178,7 @@
     .btn-primary {
       position: relative; padding: 16px 36px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500;
       color: var(--void); background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border: none; border-radius: 14px; cursor: none; overflow: hidden;
+      border: none; border-radius: 14px; cursor: auto; overflow: hidden;
       transition: all 0.4s cubic-bezier(0.16,1,0.3,1); letter-spacing: 0.5px; text-decoration: none;
       display: inline-flex; align-items: center; gap: 8px;
     }
@@ -203,7 +191,7 @@
     .related-header h2 { font-family: 'Syne', serif; font-size: 28px; font-weight: 700; letter-spacing: -0.8px; }
     .related-header a { font-size: 14px; color: var(--primary); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
     .related-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .related-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; transition: all 0.4s ease; cursor: none; text-decoration: none; display: block; }
+    .related-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; transition: all 0.4s ease; cursor: auto; text-decoration: none; display: block; }
     .related-card:hover { transform: translateY(-4px); border-color: rgba(0,229,195,0.2); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
     .related-card .tag { display: inline-block; padding: 4px 12px; background: var(--primary-dim); border: 1px solid rgba(0,229,195,0.15); border-radius: 100px; font-size: 11px; font-weight: 500; color: var(--primary); margin-bottom: 12px; }
     .related-card h4 { font-family: 'Syne', serif; font-size: 18px; font-weight: 700; margin-bottom: 8px; color: var(--text-primary); }
@@ -252,7 +240,7 @@
       .related-grid { grid-template-columns: 1fr; }
       .footer-grid { grid-template-columns: 1fr; gap: 30px; }
       body { cursor: auto; }
-      .cursor, .cursor-trail { display: none; }
+      
     }
   </style>
 <base target="_blank">
@@ -260,7 +248,7 @@
 <body>
   <canvas id="mesh-canvas"></canvas>
   <div class="grid-overlay"></div>
-  <div class="cursor" id="cursor"></div>
+  
 
   <div class="ticker-wrap">
     <div class="ticker" id="ticker">
@@ -587,7 +575,7 @@
       mouseY = e.clientY;
     });
 
-    function updateCursor() {
+     {
       cursor.style.left = mouseX + 'px';
       cursor.style.top = mouseY + 'px';
       trails.forEach((t, i) => {
@@ -599,7 +587,7 @@
         t.el.style.opacity = (1 - i / maxTrails) * 0.5;
         t.el.style.transform = `translate(-50%, -50%) scale(${1 - i / maxTrails * 0.5})`;
       });
-      requestAnimationFrame(updateCursor);
+      
     }
     updateCursor();
 

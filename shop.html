@@ -10,6 +10,7 @@
     gtag('config', 'GA_MEASUREMENT_ID');
   </script>
   <meta charset="UTF-8">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SparkNest Shop — Curious Kids Merchandise & Educational Gear</title>
   <meta name="description" content="Print-on-demand merchandise for curious kids and passionate teachers. T-shirts, mugs, posters, stickers — designed by educators, loved by families.">
@@ -47,7 +48,7 @@
       background: var(--void);
       color: var(--text-primary);
       overflow-x: hidden;
-      cursor: none;
+      cursor: auto;
       min-height: 100vh;
     }
 
@@ -64,20 +65,7 @@
       -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
     }
 
-    .cursor {
-      position: fixed; width: 12px; height: 12px; border-radius: 50%;
-      background: var(--primary); pointer-events: none; z-index: 9999;
-      transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s;
-      box-shadow: 0 0 10px var(--primary), 0 0 30px var(--primary), 0 0 60px rgba(0,229,195,0.3);
-      mix-blend-mode: screen;
-    }
-    .cursor.hover { width: 40px; height: 40px; background: rgba(0,229,195,0.2); border: 2px solid var(--primary); }
-
-    .cursor-trail {
-      position: fixed; width: 6px; height: 6px; border-radius: 50%;
-      background: var(--primary); pointer-events: none; z-index: 9998;
-      opacity: 0.6; transform: translate(-50%, -50%); box-shadow: 0 0 8px var(--primary);
-    }
+    
 
     .ticker-wrap {
       width: 100%; overflow: hidden; background: rgba(6,8,15,0.95);
@@ -120,13 +108,13 @@
     .nav-cta {
       padding: 10px 24px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500;
       color: var(--void); background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border: none; border-radius: 12px; cursor: none; position: relative; overflow: hidden;
+      border: none; border-radius: 12px; cursor: auto; position: relative; overflow: hidden;
       transition: all 0.3s ease; letter-spacing: 0.5px;
     }
     .nav-cta::after { content: ''; position: absolute; inset: -2px; border-radius: 14px; background: linear-gradient(135deg, var(--primary), var(--secondary)); opacity: 0; filter: blur(12px); transition: opacity 0.3s ease; z-index: -1; }
     .nav-cta:hover { transform: translateY(-2px); box-shadow: var(--glow-primary); }
     .nav-cta:hover::after { opacity: 0.6; }
-    .mobile-menu-btn { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: none; padding: 8px; }
+    .mobile-menu-btn { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: auto; padding: 8px; }
     .mobile-menu-btn span { display: block; width: 24px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: all 0.3s ease; }
 
     .page-hero {
@@ -148,7 +136,7 @@
     .btn-primary {
       position: relative; padding: 16px 36px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500;
       color: var(--void); background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border: none; border-radius: 14px; cursor: none; overflow: hidden;
+      border: none; border-radius: 14px; cursor: auto; overflow: hidden;
       transition: all 0.4s cubic-bezier(0.16,1,0.3,1); letter-spacing: 0.5px; text-decoration: none;
       display: inline-flex; align-items: center; gap: 8px;
     }
@@ -159,7 +147,7 @@
     .btn-secondary {
       position: relative; padding: 16px 36px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 400;
       color: var(--text-primary); background: transparent; border: 1px solid var(--border); border-radius: 14px;
-      cursor: none; overflow: hidden; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); letter-spacing: 0.5px;
+      cursor: auto; overflow: hidden; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); letter-spacing: 0.5px;
       text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
     }
     .btn-secondary::before { content: ''; position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(135deg, var(--primary-dim), var(--secondary-dim)); opacity: 0; transition: opacity 0.4s ease; z-index: -1; }
@@ -178,7 +166,7 @@
     .card {
       position: relative; padding: 36px 28px; background: var(--surface); border: 1px solid var(--border);
       border-radius: 20px; overflow: hidden; transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
-      cursor: none; transform-style: preserve-3d; perspective: 1000px;
+      cursor: auto; transform-style: preserve-3d; perspective: 1000px;
     }
     .card::before {
       content: ''; position: absolute; inset: 0; border-radius: 20px; padding: 1px;
@@ -220,7 +208,7 @@
     .product-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
     .product-card {
       position: relative; background: var(--surface); border: 1px solid var(--border);
-      border-radius: 20px; overflow: hidden; transition: all 0.5s cubic-bezier(0.16,1,0.3,1); cursor: none;
+      border-radius: 20px; overflow: hidden; transition: all 0.5s cubic-bezier(0.16,1,0.3,1); cursor: auto;
     }
     .product-card:hover { transform: translateY(-6px); border-color: rgba(139,128,255,0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.35), var(--glow-secondary); }
     .product-card .product-image { width: 100%; height: 220px; background: linear-gradient(135deg, var(--surface-elevated), var(--surface)); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
@@ -237,7 +225,7 @@
     .printable-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
     .printable-card {
       position: relative; background: var(--surface); border: 1px solid var(--border);
-      border-radius: 16px; overflow: hidden; transition: all 0.4s ease; cursor: none;
+      border-radius: 16px; overflow: hidden; transition: all 0.4s ease; cursor: auto;
       text-decoration: none; display: block;
     }
     .printable-card:hover { transform: translateY(-4px); border-color: rgba(0,229,195,0.2); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
@@ -306,7 +294,7 @@
       .team-grid { grid-template-columns: 1fr; }
       .content-block { padding: 28px; }
       body { cursor: auto; }
-      .cursor, .cursor-trail { display: none; }
+      
     }
 
   </style>
@@ -315,7 +303,7 @@
 <body>
   <canvas id="mesh-canvas"></canvas>
   <div class="grid-overlay"></div>
-  <div class="cursor" id="cursor"></div>
+  
 
   <div class="ticker-wrap">
     <div class="ticker" id="ticker">
@@ -647,44 +635,8 @@
     }
     drawMesh();
 
-    // ─── Custom Cursor ───
-    const cursor = document.getElementById('cursor');
-    const trails = [];
-    const maxTrails = 12;
-    let mouseX = 0, mouseY = 0;
-
-    for (let i = 0; i < maxTrails; i++) {
-      const trail = document.createElement('div');
-      trail.className = 'cursor-trail';
-      document.body.appendChild(trail);
-      trails.push({ el: trail, x: 0, y: 0 });
-    }
-
-    document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-
-    function updateCursor() {
-      cursor.style.left = mouseX + 'px';
-      cursor.style.top = mouseY + 'px';
-      trails.forEach((t, i) => {
-        const delay = (i + 1) * 0.08;
-        t.x += (mouseX - t.x) * delay;
-        t.y += (mouseY - t.y) * delay;
-        t.el.style.left = t.x + 'px';
-        t.el.style.top = t.y + 'px';
-        t.el.style.opacity = (1 - i / maxTrails) * 0.5;
-        t.el.style.transform = `translate(-50%, -50%) scale(${1 - i / maxTrails * 0.5})`;
-      });
-      requestAnimationFrame(updateCursor);
-    }
-    updateCursor();
-
-    document.querySelectorAll('a, button, .card, .product-card, .printable-card').forEach(el => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-    });
+    
+   
 
     // ─── Navbar Scroll Effect ───
     const navbar = document.getElementById('navbar');
