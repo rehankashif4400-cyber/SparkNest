@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'GA_MEASUREMENT_ID');
+  </script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SparkNest Printables — Free Educational Resources for Kids</title>
+  <meta name="description" content="Free printable worksheets, charts, and activity sheets for curious kids. Math, science, language, geography — download and print instantly.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --void: #06080f;
+      --surface: #0d1420;
+      --surface-elevated: #111a2b;
+      --surface-hover: #162038;
+      --primary: #00e5c3;
+      --primary-dim: rgba(0, 229, 195, 0.15);
+      --secondary: #8b80ff;
+      --secondary-dim: rgba(139, 128, 255, 0.15);
+      --accent: #ffc947;
+      --accent-dim: rgba(255, 201, 71, 0.15);
+      --text-primary: #edf2fc;
+      --text-secondary: #4d6180;
+      --text-muted: #2a3a55;
+      --grid-line: #1a2840;
+      --border: rgba(26, 40, 64, 0.6);
+      --glow-primary: 0 0 20px rgba(0, 229, 195, 0.3), 0 0 60px rgba(0, 229, 195, 0.1);
+      --glow-secondary: 0 0 20px rgba(139, 128, 255, 0.3), 0 0 60px rgba(139, 128, 255, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--void);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    #mesh-canvas {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
+    }
+
+    .grid-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 60px 60px; opacity: 0.3; z-index: 1; pointer-events: none;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    }
+
+    .ticker-wrap {
+      width: 100%; overflow: hidden; background: rgba(6,8,15,0.95);
+      border-bottom: 1px solid var(--border); position: fixed; top: 0; z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    .ticker { display: flex; width: max-content; animation: ticker-scroll 40s linear infinite; padding: 10px 0; }
+    .ticker-item {
+      display: inline-flex; align-items: center; gap: 8px; padding: 0 40px;
+      font-size: 12px; font-weight: 400; color: var(--text-secondary); white-space: nowrap; letter-spacing: 0.5px;
+    }
+    .ticker-item .pulse-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); animation: pulse-dot 2s ease-in-out infinite; box-shadow: 0 0 8px var(--primary); }
+    .ticker-item .stat-value { color: var(--primary); font-weight: 600; }
+    .ticker-item .accent-value { color: var(--accent); font-weight: 600; }
+    @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    @keyframes pulse-dot { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.6); } }
+
+    .navbar {
+      position: fixed; top: 42px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 40px); max-width: 1400px; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 32px; background: rgba(13,20,32,0.6); backdrop-filter: blur(20px);
+      border: 1px solid var(--border); border-radius: 16px; transition: all 0.4s ease;
+    }
+    .navbar.scrolled { top: 16px; background: rgba(13,20,32,0.9); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+    .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-logo svg { width: 42px; height: 42px; }
+    .nav-logo-text { font-family: 'Syne', serif; font-size: 22px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.8px; }
+    .nav-logo-text span { background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-links { display: flex; gap: 8px; list-style: none; }
+    .nav-links a {
+      position: relative; padding: 8px 18px; font-size: 14px; font-weight: 400;
+      color: var(--text-secondary); text-decoration: none; border-radius: 10px;
+      transition: all 0.3s ease; letter-spacing: 0.3px;
+    }
+    .nav-links a::before { content: ''; position: absolute; inset: 0; border-radius: 10px; background: linear-gradient(135deg, var(--primary-dim), var(--secondary-dim)); opacity: 0; transition: opacity 0.3s ease; z-index: -1; }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links a:hover::before { opacity: 1; }
+    .nav-links a.active { color: var(--primary); background: var(--primary-dim); }
+    .nav-cta {
+      padding: 10px 24px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500;
+      color: var(--void); background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border: none; border-radius: 12px; cursor: pointer; position: relative; overflow: hidden;
+      transition: all 0.3s ease; letter-spacing: 0.5px; text-decoration: none; display: inline-flex; align-items: center;
+    }
+    .nav-cta::after { content: ''; position: absolute; inset: -2px; border-radius: 14px; background: linear-gradient(135deg, var(--primary), var(--secondary)); opacity: 0; filter: blur(12px); transition: opacity 0.3s ease; z-index: -1; }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: var(--glow-primary); }
+    .nav-cta:hover::after { opacity: 0.6; }
+    .mobile-menu-btn { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; }
+    .mobile-menu-btn span { display: block; width: 24px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: all 0.3s ease; }
+
+    .page-hero {
+      position: relative; min-height: 45vh; display: flex; align-items: center; justify-content: center;
+      padding: 160px 24px 60px; z-index: 2; overflow: hidden;
+    }
+    .page-hero-content { text-align: center; max-width: 800px; position: relative; z-index: 10; }
+    .page-hero-badge {
+      display: inline-flex; align-items: center; gap: 8px; padding: 8px 20px;
+      background: rgba(0,229,195,0.08); border: 1px solid rgba(0,229,195,0.2);
+      border-radius: 100px; font-size: 13px; font-weight: 400; color: var(--primary);
+      margin-bottom: 24px; letter-spacing: 0.5px; backdrop-filter: blur(10px);
+    }
+    .page-hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); animation: pulse-dot 2s ease-in-out infinite; box-shadow: 0 0 8px var(--primary); }
+    .page-hero h1 { font-family: 'Syne', serif; font-size: clamp(36px, 6vw, 64px); font-weight: 800; line-height: 1.1; letter-spacing: -2px; margin-bottom: 20px; color: var(--text-primary); }
+    .page-hero h1 .gradient-text { background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .page-hero-subtitle { font-size: clamp(15px, 2vw, 18px); font-weight: 300; color: var(--text-secondary); line-height: 1.7; max-width: 600px; margin: 0 auto; letter-spacing: 0.2px; }
+
+    .section { position: relative; z-index: 2; padding: 60px 24px; }
+    .breadcrumbs { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+    .breadcrumbs a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s ease; }
+    .breadcrumbs a:hover { color: var(--primary); }
+    .breadcrumbs .sep { color: var(--text-muted); }
+
+    /* ─── FILTER BAR ─── */
+    .filter-bar {
+      max-width: 1200px; margin: 0 auto; display: flex;
+      gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center;
+    }
+    .filter-btn {
+      padding: 10px 24px; font-size: 13px; font-family: 'Outfit', sans-serif;
+      font-weight: 500; border-radius: 12px; cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+      border: 1px solid var(--border); background: transparent;
+      color: var(--text-secondary); letter-spacing: 0.3px;
+      position: relative; overflow: hidden;
+    }
+    .filter-btn::before {
+      content: ''; position: absolute; inset: 0; border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary-dim), var(--secondary-dim));
+      opacity: 0; transition: opacity 0.3s ease; z-index: -1;
+    }
+    .filter-btn:hover { border-color: rgba(0,229,195,0.3); color: var(--text-primary); transform: translateY(-2px); }
+    .filter-btn:hover::before { opacity: 1; }
+    .filter-btn.active {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--void); border: none; font-weight: 600;
+      box-shadow: var(--glow-primary); transform: translateY(-2px);
+    }
+    .filter-btn.active:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 0 30px rgba(0, 229, 195, 0.4), 0 0 60px rgba(0, 229, 195, 0.15); }
+    .filter-count { font-size: 12px; color: var(--text-muted); margin-left: 4px; font-weight: 400; }
+    .filter-btn.active .filter-count { color: var(--void); opacity: 0.7; }
+
+    /* ─── RESULTS INFO ─── */
+    .results-info {
+      max-width: 1200px; margin: 0 auto 24px; text-align: center;
+      font-size: 14px; color: var(--text-muted); height: 20px; transition: all 0.3s ease;
+    }
+    .results-info .count { color: var(--primary); font-weight: 600; }
+
+    /* ─── PRINTABLE GRID ─── */
+    .printable-grid {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    }
+    .printable-card {
+      position: relative; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden; transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+      cursor: pointer; text-decoration: none; display: block;
+    }
+    .printable-card.hidden { display: none; }
+    .printable-card.filtered-out { animation: fadeOutScale 0.4s cubic-bezier(0.16,1,0.3,1) forwards; }
+    .printable-card.filtered-in { animation: fadeInScale 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
+    @keyframes fadeOutScale { 0% { opacity: 1; transform: scale(1) translateY(0); } 100% { opacity: 0; transform: scale(0.9) translateY(20px); } }
+    @keyframes fadeInScale { 0% { opacity: 0; transform: scale(0.9) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+    .printable-card:hover { transform: translateY(-6px); border-color: rgba(0,229,195,0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.35), var(--glow-primary); }
+    .printable-card .printable-thumb {
+      width: 100%; height: 200px;
+      background: linear-gradient(135deg, var(--surface-elevated), var(--surface-hover));
+      display: flex; align-items: center; justify-content: center; position: relative;
+      overflow: hidden;
+    }
+    .printable-card .printable-thumb::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 40%, var(--surface) 100%);
+    }
+    .printable-card .printable-thumb svg {
+      width: 64px; height: 64px; opacity: 0.4; transition: all 0.4s ease;
+    }
+    .printable-card:hover .printable-thumb svg { transform: scale(1.1); opacity: 0.7; }
+    .printable-card .printable-tag {
+      position: absolute; top: 16px; right: 16px;
+      padding: 4px 12px; background: var(--primary-dim);
+      border: 1px solid rgba(0,229,195,0.15); border-radius: 100px;
+      font-size: 11px; font-weight: 500; color: var(--primary); letter-spacing: 0.5px;
+      z-index: 2; transition: all 0.3s ease;
+    }
+    .printable-card:hover .printable-tag { background: rgba(0, 229, 195, 0.25); border-color: rgba(0,229,195,0.3); }
+    .printable-card .printable-info { padding: 24px; }
+    .printable-card .printable-info h3 {
+      font-family: 'Syne', serif; font-size: 18px; font-weight: 700;
+      margin-bottom: 6px; letter-spacing: -0.5px; color: var(--text-primary);
+      transition: color 0.3s ease;
+    }
+    .printable-card:hover .printable-info h3 { color: var(--primary); }
+    .printable-card .printable-info p {
+      font-size: 13px; color: var(--text-secondary); line-height: 1.5;
+    }
+    .printable-card .printable-meta {
+      display: flex; align-items: center; gap: 8px; margin-top: 14px;
+      padding-top: 14px; border-top: 1px solid var(--border);
+    }
+    .printable-card .printable-meta .download-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 500; color: var(--primary);
+      text-decoration: none; transition: all 0.3s ease;
+    }
+    .printable-card .printable-meta .download-btn:hover { gap: 10px; }
+
+    /* ─── LOAD MORE ─── */
+    .load-more-container {
+      max-width: 1200px; margin: 40px auto 0; text-align: center; display: none;
+    }
+    .load-more-container.visible { display: block; animation: fadeInUp 0.5s ease forwards; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .load-more-btn {
+      padding: 14px 40px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500;
+      color: var(--text-primary); background: transparent; border: 1px solid var(--border);
+      border-radius: 14px; cursor: pointer; transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+      letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 10px;
+      position: relative; overflow: hidden;
+    }
+    .load-more-btn::before {
+      content: ''; position: absolute; inset: 0; border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary-dim), var(--secondary-dim));
+      opacity: 0; transition: opacity 0.4s ease; z-index: -1;
+    }
+    .load-more-btn:hover { border-color: rgba(0,229,195,0.3); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    .load-more-btn:hover::before { opacity: 1; }
+    .load-more-btn .chevron { transition: transform 0.3s ease; }
+    .load-more-btn:hover .chevron { transform: translateY(3px); }
+    .load-more-btn.hidden { display: none; }
+
+    /* ─── EMPTY STATE ─── */
+    .empty-state {
+      max-width: 600px; margin: 60px auto; text-align: center;
+      padding: 48px 24px; display: none;
+    }
+    .empty-state.visible { display: block; animation: fadeInScale 0.5s ease forwards; }
+    .empty-state svg { width: 80px; height: 80px; opacity: 0.3; margin-bottom: 20px; }
+    .empty-state h3 { font-family: 'Syne', serif; font-size: 22px; font-weight: 700; margin-bottom: 8px; color: var(--text-secondary); }
+    .empty-state p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ─── FOOTER ─── */
+    .footer { position: relative; z-index: 2; padding: 60px 24px 40px; border-top: 1px solid var(--border); background: rgba(6,8,15,0.8); }
+    .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; }
+    .footer-brand .footer-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .footer-brand .footer-logo svg { width: 36px; height: 36px; }
+    .footer-brand .footer-logo-text { font-family: 'Syne', serif; font-size: 20px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; }
+    .footer-brand .footer-logo-text span { background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .footer-brand p { font-size: 14px; font-weight: 300; color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px; }
+    .footer-brand .social-links { display: flex; gap: 12px; }
+    .footer-brand .social-links a { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-secondary); transition: all 0.3s ease; text-decoration: none; }
+    .footer-brand .social-links a:hover { border-color: var(--primary); color: var(--primary); box-shadow: var(--glow-primary); }
+    .footer-brand .social-links a svg { width: 18px; height: 18px; }
+    .footer-col h4 { font-family: 'Syne', serif; font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px; letter-spacing: 0.5px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 12px; }
+    .footer-col ul li a { font-size: 14px; font-weight: 300; color: var(--text-secondary); text-decoration: none; transition: all 0.3s ease; }
+    .footer-col ul li a:hover { color: var(--primary); padding-left: 4px; }
+    .footer-bottom { max-width: 1200px; margin: 40px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-bottom p { font-size: 13px; color: var(--text-muted); }
+    .footer-bottom a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s ease; }
+    .footer-bottom a:hover { color: var(--primary); }
+
+    .scroll-reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
+    .scroll-reveal.revealed { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 1024px) {
+      .printable-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .mobile-menu-btn { display: flex; }
+      .printable-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+      .filter-bar { gap: 8px; }
+      .filter-btn { padding: 8px 16px; font-size: 12px; }
+    }
+  </style>
+  <base target="_blank">
+<base target="_blank">
+</head>
+<body>
+  <canvas id="mesh-canvas"></canvas>
+  <div class="grid-overlay"></div>
+
+  <div class="ticker-wrap">
+    <div class="ticker" id="ticker">
+      <div class="ticker-item"><span class="pulse-dot"></span><span class="stat-value">2,847</span> parents helped this month</div>
+      <div class="ticker-item"><span class="pulse-dot"></span>Latest review: <span class="accent-value">Synthesis Tutor</span> updated today</div>
+      <div class="ticker-item"><span class="pulse-dot"></span><span class="stat-value">17</span> AI tools tested & reviewed</div>
+      <div class="ticker-item"><span class="pulse-dot"></span>Free printable: <span class="accent-value">Solar System Chart</span> now available</div>
+      <div class="ticker-item"><span class="pulse-dot"></span><span class="stat-value">200+</span> parent reviews synthesized per article</div>
+      <div class="ticker-item"><span class="pulse-dot"></span>New comparison: <span class="accent-value">Synthesis vs Khanmigo</span></div>
+      <div class="ticker-item"><span class="pulse-dot"></span><span class="stat-value">6</span> content categories live</div>
+      <div class="ticker-item"><span class="pulse-dot"></span>Trusted by parents in <span class="accent-value">42 countries</span></div>
+      <div class="ticker-item"><span class="pulse-dot"></span><span class="stat-value">2,847</span> parents helped this month</div>
+      <div class="ticker-item"><span class="pulse-dot"></span>Latest review: <span class="accent-value">Synthesis Tutor</span> updated today</div>
+      <div class="ticker-item"><span class="pulse-dot"></span><span class="stat-value">17</span> AI tools tested & reviewed</div>
+      <div class="ticker-item"><span class="pulse-dot"></span>Free printable: <span class="accent-value">Solar System Chart</span> now available</div>
+      <div class="ticker-item"><span class="pulse-dot"></span><span class="stat-value">200+</span> parent reviews synthesized per article</div>
+      <div class="ticker-item"><span class="pulse-dot"></span>New comparison: <span class="accent-value">Synthesis vs Khanmigo</span></div>
+      <div class="ticker-item"><span class="pulse-dot"></span><span class="stat-value">6</span> content categories live</div>
+      <div class="ticker-item"><span class="pulse-dot"></span>Trusted by parents in <span class="accent-value">42 countries</span></div>
+    </div>
+  </div>
+
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="nav-logo">
+      <svg viewBox="0 0 68 68" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="navIconG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00e5c3"/><stop offset="100%" stop-color="#8b80ff"/></linearGradient>
+          <radialGradient id="navHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00e5c3" stop-opacity="0.18"/><stop offset="100%" stop-color="#00e5c3" stop-opacity="0"/></radialGradient>
+        </defs>
+        <ellipse cx="34" cy="34" rx="46" ry="46" fill="url(#navHalo)"/>
+        <rect width="68" height="68" rx="19" fill="#0d1828" stroke="#1a2840" stroke-width="1"/>
+        <line x1="34" y1="34" x2="16" y2="16" stroke="#00e5c3" stroke-width="1.2" stroke-opacity="0.55"/>
+        <line x1="34" y1="34" x2="52" y2="16" stroke="#00e5c3" stroke-width="1.2" stroke-opacity="0.45"/>
+        <line x1="34" y1="34" x2="10" y2="38" stroke="#8b80ff" stroke-width="1.0" stroke-opacity="0.55"/>
+        <line x1="34" y1="34" x2="58" y2="44" stroke="#8b80ff" stroke-width="1.0" stroke-opacity="0.45"/>
+        <line x1="34" y1="34" x2="24" y2="56" stroke="#00e5c3" stroke-width="0.9" stroke-opacity="0.42"/>
+        <line x1="34" y1="34" x2="50" y2="58" stroke="#8b80ff" stroke-width="0.9" stroke-opacity="0.38"/>
+        <line x1="16" y1="16" x2="52" y2="16" stroke="#00e5c3" stroke-width="0.5" stroke-opacity="0.16"/>
+        <line x1="10" y1="38" x2="24" y2="56" stroke="#8b80ff" stroke-width="0.5" stroke-opacity="0.14"/>
+        <circle cx="16" cy="16" r="4.5" fill="#00e5c3" fill-opacity="0.95"/><circle cx="16" cy="16" r="8" fill="#00e5c3" fill-opacity="0.1"/>
+        <circle cx="52" cy="16" r="3.8" fill="#00e5c3" fill-opacity="0.75"/>
+        <circle cx="10" cy="38" r="3.2" fill="#8b80ff" fill-opacity="0.85"/>
+        <circle cx="58" cy="44" r="3.2" fill="#8b80ff" fill-opacity="0.62"/>
+        <circle cx="24" cy="56" r="2.6" fill="#00e5c3" fill-opacity="0.62"/>
+        <circle cx="50" cy="58" r="2.6" fill="#8b80ff" fill-opacity="0.52"/>
+        <circle cx="34" cy="34" r="15" fill="none" stroke="#00e5c3" stroke-width="0.6" stroke-opacity="0.25"/>
+        <circle cx="34" cy="34" r="11" fill="url(#navIconG)"/>
+        <path d="M32.5 27 L30 34 L33.5 34 L34.5 41 L37.5 33 L34 33 L36.5 27 Z" fill="#06080f" opacity="0.92"/>
+      </svg>
+      <span class="nav-logo-text">Spark<span>Nest</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+      <li><a href="#guides">Guides</a></li>
+      <li><a href="printables.html" class="active">Printables</a></li>
+      <li><a href="shop.html">Shop</a></li>
+    </ul>
+    <a href="about.html" class="nav-cta">Get Started</a>
+    <button class="mobile-menu-btn" id="mobileMenuBtn"><span></span><span></span><span></span></button>
+  </nav>
+
+  <section class="page-hero">
+    <div class="page-hero-content">
+      <div class="page-hero-badge">
+        <span class="dot"></span>
+        <span>Free Downloads · Instant Access</span>
+      </div>
+      <h1>Printables for <span class="gradient-text">little learners</span></h1>
+      <p class="page-hero-subtitle">Worksheets, charts, and activity sheets designed by educators. Download, print, and watch curiosity unfold — all completely free.</p>
+    </div>
+  </section>
+
+  <div class="breadcrumbs">
+    <a href="index.html">Home</a>
+    <span class="sep">/</span>
+    <span style="color:var(--primary)">Printables</span>
+  </div>
+
+  <!-- Filter Bar -->
+  <section class="section" style="padding-bottom:20px;">
+    <div class="filter-bar scroll-reveal" id="filterBar">
+      <button class="filter-btn active" data-category="all">
+        All<span class="filter-count" id="count-all">(12)</span>
+      </button>
+      <button class="filter-btn" data-category="math">
+        Math<span class="filter-count" id="count-math">(3)</span>
+      </button>
+      <button class="filter-btn" data-category="science">
+        Science<span class="filter-count" id="count-science">(3)</span>
+      </button>
+      <button class="filter-btn" data-category="language">
+        Language<span class="filter-count" id="count-language">(2)</span>
+      </button>
+      <button class="filter-btn" data-category="geography">
+        Geography<span class="filter-count" id="count-geography">(2)</span>
+      </button>
+      <button class="filter-btn" data-category="activity">
+        Activity Sheets<span class="filter-count" id="count-activity">(2)</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Results Info -->
+  <div class="results-info" id="resultsInfo">
+    Showing <span class="count" id="showingCount">12</span> of <span class="count" id="totalCount">12</span> printables
+  </div>
+
+  <!-- Printables Grid -->
+  <section class="section" style="padding-top:20px;">
+    <div class="printable-grid" id="printableGrid">
+
+      <!-- Math -->
+      <a href="#" class="printable-card scroll-reveal" data-category="math">
+        <div class="printable-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00e5c3" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          <span class="printable-tag">Math</span>
+        </div>
+        <div class="printable-info">
+          <h3>Multiplication Table 1-12</h3>
+          <p>Color-coded chart · Ages 6-10</p>
+          <div class="printable-meta">
+            <span class="download-btn">Download PDF <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Science -->
+      <a href="#" class="printable-card scroll-reveal" data-category="science">
+        <div class="printable-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8b80ff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+          <span class="printable-tag">Science</span>
+        </div>
+        <div class="printable-info">
+          <h3>Solar System Poster</h3>
+          <p>Planets, orbits & facts · Ages 5+</p>
+          <div class="printable-meta">
+            <span class="download-btn">Download PDF <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Language -->
+      <a href="#" class="printable-card scroll-reveal" data-category="language">
+        <div class="printable-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ffc947" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h20v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+          <span class="printable-tag">Language</span>
+        </div>
+        <div class="printable-info">
+          <h3>Alphabet Tracing Sheet</h3>
+          <p>Upper & lower case · Ages 3-6</p>
+          <div class="printable-meta">
+            <span class="download-btn">Download PDF <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Geography -->
+      <a href="#" class="printable-card scroll-reveal" data-category="geography">
+        <div class="printable-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00e5c3" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span class="printable-tag">Geography</span>
+        </div>
+        <div class="printable-info">
+          <h3>World Map Coloring Page</h3>
+          <p>Continents & oceans · Ages 4-8</p>
+          <div class="printable-meta">
+            <span class="download-btn">Download PDF <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Activity -->
+      <a href="#" class="printable-card scroll-reveal" data-category="activity">
+        <div class="printable-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8b80ff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          <span class="printable-tag">Activity</span>
+        </div>
+        <div class="printable-info">
+          <h3>Dinosaur Cut & Paste</h3>
+          <p>Match bones to names · Ages 5-7</p>
+          <div class="printable-meta">
+            <span class="download-btn">Download PDF <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Math -->
+      <a href="#" class="printable-card scroll-reveal" data-category="math">
+        <div class="printable-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00e5c3" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M2 12h20"/><path d="m4.93 4.93 14.14 14.14"/><path d="m19.07 4.93-14.14 14.14"/></svg>
+          <span class="printable-tag">Math</span>
+        </div>
+        <div class="printable-info">
+          <h3>Fractions Visual Guide</h3>
+          <p>Pie charts & bars · Ages 7-10</p>
+          <div class="printable-meta">
+            <span class="download-btn">Download PDF <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Science -->
+      <a href="#" class="printable-card scroll-reveal" data-category="science">
+        <div class="printable-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8b80ff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31"/><path d="M14 9.3V1.99"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.52 16h12.96"/></svg>
+          <span class="printable-tag">Science</span>
+        </div>
+        <div class="printable-info">
+          <h3>Plant Life Cycle Wheel</h3>
+          <p>Spin & learn stages · Ages 5-8</p>
+          <div class="printable-meta">
+            <span class="download-btn">Download PDF <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Language -->
+      <a href="#" class="printable-card scroll-reveal" data-category="language">
+        <div class="printable-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ffc947" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="m9 9 2 2 4-4"/></svg>
+          <span class="printable-tag">Language</span>
+        </div>
+        <div class="printable-info">
+          <h3>Sight Words Flashcards</h3>
+          <p>First 100 words · Ages 4-7</p>
+          <div class="printable-meta">
+            <span class="download-btn">Download PDF <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Geography -->
+      <a href="#" class="printable-card scroll-reveal" data-category="geography">
+        <div class="printable-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00e5c3" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span class="printable-tag">Geography</span>
+        </div>
+        <div class="printable-info">
+          <h3>US States & Capitals</h3>
+          <p>Match game sheet · Ages 8-12</p>
+          <div class="printable-meta">
+            <span class="download-btn">Download PDF <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Activity -->
+      <a href="#" class="printable-card scroll-reveal" data-category="activity">
+        <div class="printable-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8b80ff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span class="printable-tag">Activity</span>
+        </div>
+        <div class="printable-info">
+          <h3>Emoji Emotions Chart</h3>
+          <p>Feelings & coping skills · Ages 4-8</p>
+          <div class="printable-meta">
+            <span class="download-btn">Download PDF <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Math -->
+      <a href="#" class="printable-card scroll-reveal" data-category="math">
+        <div class="printable-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00e5c3" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+          <span class="printable-tag">Math</span>
+        </div>
+        <div class="printable-info">
+          <h3>Number Bonds Worksheet</h3>
+          <p>Addition to 20 · Ages 5-7</p>
+          <div class="printable-meta">
+            <span class="download-btn">Download PDF <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Science -->
+      <a href="#" class="printable-card scroll-reveal" data-category="science">
+        <div class="printable-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8b80ff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3h11"/><path d="M6.5 21h11"/><path d="M6 12h12"/><path d="M12 3v18"/></svg>
+          <span class="printable-tag">Science</span>
+        </div>
+        <div class="printable-info">
+          <h3>Periodic Table Mini</h3>
+          <p>First 20 elements · Ages 9-12</p>
+          <div class="printable-meta">
+            <span class="download-btn">Download PDF <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <h3>No printables found</h3>
+      <p>Try selecting a different category or check back later for new uploads.</p>
+    </div>
+
+    <!-- Load More -->
+    <div class="load-more-container" id="loadMoreContainer">
+      <button class="load-more-btn" id="loadMoreBtn">
+        Load More Printables
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <svg viewBox="0 0 68 68" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="footIconG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00e5c3"/><stop offset="100%" stop-color="#8b80ff"/></linearGradient>
+            </defs>
+            <rect width="68" height="68" rx="19" fill="#0d1828" stroke="#1a2840" stroke-width="1"/>
+            <line x1="34" y1="34" x2="16" y2="16" stroke="#00e5c3" stroke-width="1.2" stroke-opacity="0.55"/>
+            <line x1="34" y1="34" x2="52" y2="16" stroke="#00e5c3" stroke-width="1.2" stroke-opacity="0.45"/>
+            <line x1="34" y1="34" x2="10" y2="38" stroke="#8b80ff" stroke-width="1.0" stroke-opacity="0.55"/>
+            <line x1="34" y1="34" x2="58" y2="44" stroke="#8b80ff" stroke-width="1.0" stroke-opacity="0.45"/>
+            <line x1="34" y1="34" x2="24" y2="56" stroke="#00e5c3" stroke-width="0.9" stroke-opacity="0.42"/>
+            <line x1="34" y1="34" x2="50" y2="58" stroke="#8b80ff" stroke-width="0.9" stroke-opacity="0.38"/>
+            <circle cx="16" cy="16" r="4.5" fill="#00e5c3" fill-opacity="0.95"/>
+            <circle cx="52" cy="16" r="3.8" fill="#00e5c3" fill-opacity="0.75"/>
+            <circle cx="10" cy="38" r="3.2" fill="#8b80ff" fill-opacity="0.85"/>
+            <circle cx="58" cy="44" r="3.2" fill="#8b80ff" fill-opacity="0.62"/>
+            <circle cx="24" cy="56" r="2.6" fill="#00e5c3" fill-opacity="0.62"/>
+            <circle cx="50" cy="58" r="2.6" fill="#8b80ff" fill-opacity="0.52"/>
+            <circle cx="34" cy="34" r="15" fill="none" stroke="#00e5c3" stroke-width="0.6" stroke-opacity="0.25"/>
+            <circle cx="34" cy="34" r="11" fill="url(#footIconG)"/>
+            <path d="M32.5 27 L30 34 L33.5 34 L34.5 41 L37.5 33 L34 33 L36.5 27 Z" fill="#06080f" opacity="0.92"/>
+          </svg>
+          <span class="footer-logo-text">Spark<span>Nest</span></span>
+        </div>
+        <p>The future of children's learning starts here. Honest reviews, free resources, and parent-trusted recommendations since 2026.</p>
+        <div class="social-links">
+          <a href="#" aria-label="Twitter">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="#" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Categories</h4>
+        <ul>
+          <li><a href="#">AI Learning Tools</a></li>
+          <li><a href="#">Educational Toys</a></li>
+          <li><a href="#">Books & Courses</a></li>
+          <li><a href="printables.html">Free Printables</a></li>
+          <li><a href="#">Parent Guides</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#">All Reviews</a></li>
+          <li><a href="#">Comparisons</a></li>
+          <li><a href="age-guide-5-year-olds.html">Age Guides</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="privacy-policy.html">Privacy Policy</a></li>
+          <li><a href="affiliate-disclosure.html">Affiliate Disclosure</a></li>
+          <li><a href="terms-of-use.html">Terms of Use</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>SparkNest is a participant in the Amazon Services LLC Associates Program and other affiliate programs. We earn from qualifying purchases.</p>
+      <p>SparkNest &copy; 2026. Built with curiosity.</p>
+    </div>
+  </footer>
+
+  <script>
+    // ─── Background Mesh Animation ───
+    const canvas = document.getElementById('mesh-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const blobs = [
+      { x: 0.3, y: 0.3, r: 0.4, color: 'rgba(0, 229, 195, 0.04)', vx: 0.0003, vy: 0.0002 },
+      { x: 0.7, y: 0.6, r: 0.35, color: 'rgba(139, 128, 255, 0.03)', vx: -0.0002, vy: 0.0003 },
+      { x: 0.5, y: 0.8, r: 0.3, color: 'rgba(0, 229, 195, 0.025)', vx: 0.0002, vy: -0.0002 },
+      { x: 0.2, y: 0.7, r: 0.25, color: 'rgba(139, 128, 255, 0.02)', vx: -0.0003, vy: -0.0001 }
+    ];
+
+    function drawMesh() {
+      ctx.clearRect(0, 0, width, height);
+      blobs.forEach(b => {
+        b.x += b.vx;
+        b.y += b.vy;
+        if (b.x < -0.2 || b.x > 1.2) b.vx *= -1;
+        if (b.y < -0.2 || b.y > 1.2) b.vy *= -1;
+        const gradient = ctx.createRadialGradient(b.x * width, b.y * height, 0, b.x * width, b.y * height, b.r * Math.max(width, height));
+        gradient.addColorStop(0, b.color);
+        gradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+      });
+      requestAnimationFrame(drawMesh);
+    }
+    drawMesh();
+
+    // ─── Navbar Scroll Effect ───
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) navbar.classList.add('scrolled');
+      else navbar.classList.remove('scrolled');
+    });
+
+    // ─── Scroll Reveal ───
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.scroll-reveal').forEach(el => revealObserver.observe(el));
+
+    // ═══════════════════════════════════════════════════════
+    // ─── CATEGORY FILTERING SYSTEM ───
+    // ═══════════════════════════════════════════════════════
+
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const printableCards = document.querySelectorAll('.printable-card');
+    const resultsInfo = document.getElementById('resultsInfo');
+    const showingCount = document.getElementById('showingCount');
+    const totalCount = document.getElementById('totalCount');
+    const emptyState = document.getElementById('emptyState');
+    const loadMoreContainer = document.getElementById('loadMoreContainer');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+
+    const ITEMS_PER_PAGE = 6;
+    let currentCategory = 'all';
+    let visibleCount = 0;
+    let filteredCards = [];
+
+    function updateCategoryCounts() {
+      const counts = { all: printableCards.length };
+      printableCards.forEach(card => {
+        const cat = card.dataset.category;
+        counts[cat] = (counts[cat] || 0) + 1;
+      });
+      Object.keys(counts).forEach(cat => {
+        const badge = document.getElementById(`count-${cat}`);
+        if (badge) badge.textContent = `(${counts[cat]})`;
+      });
+    }
+
+    function getFilteredCards(category) {
+      if (category === 'all') {
+        return Array.from(printableCards);
+      }
+      return Array.from(printableCards).filter(card => card.dataset.category === category);
+    }
+
+    function updateResultsInfo(showing, total) {
+      showingCount.textContent = showing;
+      totalCount.textContent = total;
+      resultsInfo.style.opacity = '1';
+    }
+
+    function filterPrintables(category) {
+      currentCategory = category;
+      filteredCards = getFilteredCards(category);
+      const totalFiltered = filteredCards.length;
+
+      printableCards.forEach(card => {
+        card.classList.remove('filtered-in', 'filtered-out', 'hidden');
+        card.style.display = 'none';
+        card.style.animationDelay = '0s';
+      });
+
+      if (totalFiltered === 0) {
+        emptyState.classList.add('visible');
+        resultsInfo.style.opacity = '0';
+        loadMoreContainer.classList.remove('visible');
+        return;
+      }
+
+      emptyState.classList.remove('visible');
+
+      const cardsToShow = filteredCards.slice(0, ITEMS_PER_PAGE);
+      visibleCount = cardsToShow.length;
+
+      cardsToShow.forEach((card, index) => {
+        card.style.display = 'block';
+        card.style.animationDelay = `${index * 0.08}s`;
+        card.classList.add('filtered-in');
+        card.classList.remove('revealed');
+        setTimeout(() => card.classList.add('revealed'), 50 + (index * 80));
+      });
+
+      updateResultsInfo(visibleCount, totalFiltered);
+
+      if (totalFiltered > ITEMS_PER_PAGE) {
+        loadMoreContainer.classList.add('visible');
+        loadMoreBtn.classList.remove('hidden');
+      } else {
+        loadMoreContainer.classList.remove('visible');
+      }
+    }
+
+    function loadMore() {
+      const remainingCards = filteredCards.slice(visibleCount);
+      const nextBatch = remainingCards.slice(0, ITEMS_PER_PAGE);
+
+      nextBatch.forEach((card, index) => {
+        card.style.display = 'block';
+        card.style.animationDelay = `${index * 0.08}s`;
+        card.classList.add('filtered-in');
+        card.classList.remove('revealed');
+        setTimeout(() => card.classList.add('revealed'), 50 + (index * 80));
+      });
+
+      visibleCount += nextBatch.length;
+      updateResultsInfo(visibleCount, filteredCards.length);
+
+      if (visibleCount >= filteredCards.length) {
+        loadMoreBtn.classList.add('hidden');
+      }
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const category = btn.dataset.category;
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        filterPrintables(category);
+
+        const gridSection = document.getElementById('printableGrid');
+        if (gridSection) {
+          const rect = gridSection.getBoundingClientRect();
+          if (rect.top < 0 || rect.top > window.innerHeight) {
+            gridSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    });
+
+    loadMoreBtn.addEventListener('click', loadMore);
+
+    updateCategoryCounts();
+    filterPrintables('all');
+
+    // ─── URL Hash Support ───
+    function handleHashFilter() {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        const targetBtn = document.querySelector(`.filter-btn[data-category="${hash}"]`);
+        if (targetBtn) {
+          targetBtn.click();
+        }
+      }
+    }
+    window.addEventListener('hashchange', handleHashFilter);
+    handleHashFilter();
+
+  </script>
+</body>
+</html>

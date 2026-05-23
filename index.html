@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'GA_MEASUREMENT_ID');
+  </script>
+  <meta charset="UTF-8">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SparkNest — AI Learning Tools & Educational Resources</title>
+  <meta name="description" content="The future of children's learning starts here. Honest reviews of AI tutors, educational toys, and free resources for parents.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --void: #06080f;
+      --surface: #0d1420;
+      --surface-elevated: #111a2b;
+      --surface-hover: #162038;
+      --primary: #00e5c3;
+      --primary-dim: rgba(0, 229, 195, 0.15);
+      --secondary: #8b80ff;
+      --secondary-dim: rgba(139, 128, 255, 0.15);
+      --accent: #ffc947;
+      --accent-dim: rgba(255, 201, 71, 0.15);
+      --text-primary: #edf2fc;
+      --text-secondary: #4d6180;
+      --text-muted: #2a3a55;
+      --grid-line: #1a2840;
+      --border: rgba(26, 40, 64, 0.6);
+      --glow-primary: 0 0 20px rgba(0, 229, 195, 0.3), 0 0 60px rgba(0, 229, 195, 0.1);
+      --glow-secondary: 0 0 20px rgba(139, 128, 255, 0.3), 0 0 60px rgba(139, 128, 255, 0.1);
+      --glow-accent: 0 0 20px rgba(255, 201, 71, 0.3), 0 0 60px rgba(255, 201, 71, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--void);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      cursor: auto;
+      min-height: 100vh;
+    }
+
+    #mesh-canvas {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
+    }
+
+    .grid-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 60px 60px; opacity: 0.3; z-index: 1; pointer-events: none;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    }
+
+    
+
+    .ticker-wrap {
+      width: 100%; overflow: hidden; background: rgba(6,8,15,0.95);
+      border-bottom: 1px solid var(--border); position: fixed; top: 0; z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    .ticker { display: flex; width: max-content; animation: ticker-scroll 40s linear infinite; padding: 10px 0; }
+    .ticker-item {
+      display: inline-flex; align-items: center; gap: 8px; padding: 0 40px;
+      font-size: 12px; font-weight: 400; color: var(--text-secondary); white-space: nowrap; letter-spacing: 0.5px;
+    }
+    .ticker-item .pulse-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); animation: pulse-dot 2s ease-in-out infinite; box-shadow: 0 0 8px var(--primary); }
+    .ticker-item .stat-value { color: var(--primary); font-weight: 600; }
+    .ticker-item .accent-value { color: var(--accent); font-weight: 600; }
+    @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    @keyframes pulse-dot { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.6); } }
+
+    .navbar {
+      position: fixed; top: 42px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 40px); max-width: 1400px; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 32px; background: rgba(13,20,32,0.6); backdrop-filter: blur(20px);
+      border: 1px solid var(--border); border-radius: 16px; transition: all 0.4s ease;
+    }
+    .navbar.scrolled { top: 16px; background: rgba(13,20,32,0.9); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+    .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-logo svg { width: 42px; height: 42px; }
+    .nav-logo-text { font-family: 'Syne', serif; font-size: 22px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.8px; }
+    .nav-logo-text span { background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-links { display: flex; gap: 8px; list-style: none; }
+    .nav-links a {
+      position: relative; padding: 8px 18px; font-size: 14px; font-weight: 400;
+      color: var(--text-secondary); text-decoration: none; border-radius: 10px;
+      transition: all 0.3s ease; letter-spacing: 0.3px;
+    }
+    .nav-links a::before { content: ''; position: absolute; inset: 0; border-radius: 10px; background: linear-gradient(135deg, var(--primary-dim), var(--secondary-dim)); opacity: 0; transition: opacity 0.3s ease; z-index: -1; }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links a:hover::before { opacity: 1; }
+    .nav-cta {
+      padding: 10px 24px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500;
+      color: var(--void); background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border: none; border-radius: 12px; cursor: auto; position: relative; overflow: hidden;
+      transition: all 0.3s ease; letter-spacing: 0.5px;
+    }
+    .nav-cta::after { content: ''; position: absolute; inset: -2px; border-radius: 14px; background: linear-gradient(135deg, var(--primary), var(--secondary)); opacity: 0; filter: blur(12px); transition: opacity 0.3s ease; z-index: -1; }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: var(--glow-primary); }
+    .nav-cta:hover::after { opacity: 0.6; }
+    .mobile-menu-btn { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: auto; padding: 8px; }
+    .mobile-menu-btn span { display: block; width: 24px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: all 0.3s ease; }
+
+    .hero {
+      position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 140px 24px 80px; z-index: 2; overflow: hidden;
+    }
+    .hero-content { text-align: center; max-width: 900px; position: relative; z-index: 10; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px; padding: 8px 20px;
+      background: rgba(0,229,195,0.08); border: 1px solid rgba(0,229,195,0.2);
+      border-radius: 100px; font-size: 13px; font-weight: 400; color: var(--primary);
+      margin-bottom: 32px; letter-spacing: 0.5px; backdrop-filter: blur(10px);
+    }
+    .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); animation: pulse-dot 2s ease-in-out infinite; box-shadow: 0 0 8px var(--primary); }
+    .hero h1 { font-family: 'Syne', serif; font-size: clamp(40px, 7vw, 80px); font-weight: 800; line-height: 1.05; letter-spacing: -2.5px; margin-bottom: 24px; color: var(--text-primary); }
+    .hero h1 .gradient-text { background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero h1 .cursor-blink { display: inline-block; width: 4px; height: 0.9em; background: var(--primary); margin-left: 4px; vertical-align: text-bottom; animation: blink 1s step-end infinite; box-shadow: 0 0 10px var(--primary); }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+    .hero-subtitle { font-size: clamp(16px, 2vw, 20px); font-weight: 300; color: var(--text-secondary); line-height: 1.7; max-width: 600px; margin: 0 auto 40px; letter-spacing: 0.2px; }
+    .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    .btn-primary {
+      position: relative; padding: 16px 36px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500;
+      color: var(--void); background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border: none; border-radius: 14px; cursor: auto; overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1); letter-spacing: 0.5px; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary::before { content: ''; position: absolute; inset: -3px; border-radius: 16px; background: linear-gradient(135deg, var(--primary), var(--secondary)); opacity: 0; filter: blur(16px); transition: opacity 0.4s ease; z-index: -1; }
+    .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: var(--glow-primary); }
+    .btn-primary:hover::before { opacity: 0.5; }
+
+    .btn-secondary {
+      position: relative; padding: 16px 36px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 400;
+      color: var(--text-primary); background: transparent; border: 1px solid var(--border); border-radius: 14px;
+      cursor: auto; overflow: hidden; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); letter-spacing: 0.5px;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-secondary::before { content: ''; position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(135deg, var(--primary-dim), var(--secondary-dim)); opacity: 0; transition: opacity 0.4s ease; z-index: -1; }
+    .btn-secondary:hover { border-color: rgba(0,229,195,0.3); transform: translateY(-3px); }
+    .btn-secondary:hover::before { opacity: 1; }
+
+    .orbital-system { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 700px; height: 700px; z-index: 1; pointer-events: none; }
+    .orbital-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px; }
+    .orbital-center .glow-ring { position: absolute; inset: -20px; border-radius: 50%; border: 1px solid rgba(0,229,195,0.15); animation: ring-pulse 4s ease-in-out infinite; }
+    .orbital-center .glow-ring:nth-child(2) { inset: -40px; border-color: rgba(139,128,255,0.1); animation-delay: 1s; }
+    .orbital-center .glow-ring:nth-child(3) { inset: -60px; border-color: rgba(0,229,195,0.08); animation-delay: 2s; }
+    @keyframes ring-pulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.5; } }
+    .orbital-center svg { width: 100%; height: 100%; filter: drop-shadow(0 0 30px rgba(0,229,195,0.4)); }
+    .orbit-ring { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; border: 1px dashed rgba(0,229,195,0.08); }
+    .orbit-ring.r1 { width: 280px; height: 280px; }
+    .orbit-ring.r2 { width: 420px; height: 420px; border-color: rgba(139,128,255,0.06); }
+    .orbit-ring.r3 { width: 560px; height: 560px; border-color: rgba(0,229,195,0.05); }
+
+    .trust-strip { position: relative; z-index: 2; padding: 60px 24px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: rgba(13,20,32,0.4); backdrop-filter: blur(10px); }
+    .trust-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
+    .trust-item { text-align: center; }
+    .trust-item .trust-number { font-family: 'Syne', serif; font-size: 42px; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; margin-bottom: 8px; }
+    .trust-item .trust-label { font-size: 14px; font-weight: 300; color: var(--text-secondary); letter-spacing: 0.3px; }
+
+    .section { position: relative; z-index: 2; padding: 100px 24px; }
+    .section-header { text-align: center; max-width: 700px; margin: 0 auto 60px; }
+    .section-label { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+    .section-label::before { content: ''; width: 24px; height: 1px; background: var(--primary); }
+    .section-title { font-family: 'Syne', serif; font-size: clamp(28px, 4vw, 48px); font-weight: 800; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 16px; }
+    .section-title .gradient-text { background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .section-desc { font-size: 17px; font-weight: 300; color: var(--text-secondary); line-height: 1.7; }
+
+    .categories-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .category-card {
+      position: relative; padding: 40px 32px; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden; transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+      cursor: auto; transform-style: preserve-3d; perspective: 1000px;
+    }
+    .category-card::before {
+      content: ''; position: absolute; inset: 0; border-radius: 20px; padding: 1px;
+      background: linear-gradient(135deg, transparent, transparent);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+      opacity: 0; transition: opacity 0.5s ease;
+    }
+    .category-card:hover { transform: translateY(-8px); border-color: rgba(0,229,195,0.2); box-shadow: 0 20px 60px rgba(0,0,0,0.4), var(--glow-primary); }
+    .category-card:hover::before { opacity: 1; background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+    .category-card .card-glow { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0,229,195,0.06) 0%, transparent 60%); opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
+    .category-card:hover .card-glow { opacity: 1; }
+    .category-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; position: relative; z-index: 2; }
+    .category-icon svg { width: 28px; height: 28px; }
+    .category-card h3 { font-family: 'Syne', serif; font-size: 22px; font-weight: 700; margin-bottom: 10px; position: relative; z-index: 2; letter-spacing: -0.5px; }
+    .category-card p { font-size: 14px; font-weight: 300; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px; position: relative; z-index: 2; }
+    .category-card .card-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--primary); text-decoration: none; position: relative; z-index: 2; transition: gap 0.3s ease; }
+    .category-card .card-link:hover { gap: 10px; }
+    .category-card .card-link svg { width: 14px; height: 14px; transition: transform 0.3s ease; }
+    .category-card .card-link:hover svg { transform: translateX(4px); }
+
+    .reviews-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .review-card { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; transition: all 0.5s cubic-bezier(0.16,1,0.3,1); cursor: auto; }
+    .review-card:hover { transform: translateY(-6px); border-color: rgba(139,128,255,0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.35), var(--glow-secondary); }
+    .review-card .review-image { width: 100%; height: 200px; background: linear-gradient(135deg, var(--surface-elevated), var(--surface)); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+    .review-card .review-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, var(--surface) 100%); }
+    .review-card .review-image svg { width: 60px; height: 60px; opacity: 0.6; }
+    .review-card .review-content { padding: 28px; }
+    .review-card .review-tag { display: inline-block; padding: 4px 12px; background: var(--primary-dim); border: 1px solid rgba(0,229,195,0.15); border-radius: 100px; font-size: 11px; font-weight: 500; color: var(--primary); margin-bottom: 12px; letter-spacing: 0.5px; }
+    .review-card .review-tag.toy { background: var(--secondary-dim); border-color: rgba(139,128,255,0.15); color: var(--secondary); }
+    .review-card h3 { font-family: 'Syne', serif; font-size: 20px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.5px; }
+    .review-card .review-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .review-card .stars { display: flex; gap: 3px; }
+    .review-card .stars svg { width: 14px; height: 14px; }
+    .review-card .review-meta span { font-size: 13px; color: var(--text-muted); }
+    .review-card .review-excerpt { font-size: 14px; font-weight: 300; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px; }
+    .review-card .review-cta { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--primary); text-decoration: none; transition: gap 0.3s ease; }
+    .review-card .review-cta:hover { gap: 10px; }
+
+    .cta-section { position: relative; z-index: 2; padding: 120px 24px; overflow: hidden; }
+    .cta-container { max-width: 1000px; margin: 0 auto; text-align: center; padding: 80px 60px; background: var(--surface); border: 1px solid var(--border); border-radius: 32px; position: relative; overflow: hidden; }
+    .cta-container::before { content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(0,229,195,0.08) 0%, transparent 60%); pointer-events: none; }
+    .cta-container::after { content: ''; position: absolute; bottom: -200px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(139,128,255,0.06) 0%, transparent 60%); pointer-events: none; }
+    .cta-section h2 { font-family: 'Syne', serif; font-size: clamp(28px, 4vw, 48px); font-weight: 800; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 16px; position: relative; z-index: 2; }
+    .cta-section p { font-size: 17px; font-weight: 300; color: var(--text-secondary); line-height: 1.7; max-width: 500px; margin: 0 auto 32px; position: relative; z-index: 2; }
+
+    .footer { position: relative; z-index: 2; padding: 60px 24px 40px; border-top: 1px solid var(--border); background: rgba(6,8,15,0.8); }
+    .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; }
+    .footer-brand .footer-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .footer-brand .footer-logo svg { width: 36px; height: 36px; }
+    .footer-brand .footer-logo-text { font-family: 'Syne', serif; font-size: 20px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; }
+    .footer-brand .footer-logo-text span { background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .footer-brand p { font-size: 14px; font-weight: 300; color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px; }
+    .footer-brand .social-links { display: flex; gap: 12px; }
+    .footer-brand .social-links a { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-secondary); transition: all 0.3s ease; text-decoration: none; }
+    .footer-brand .social-links a:hover { border-color: var(--primary); color: var(--primary); box-shadow: var(--glow-primary); }
+    .footer-brand .social-links a svg { width: 18px; height: 18px; }
+    .footer-col h4 { font-family: 'Syne', serif; font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px; letter-spacing: 0.5px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 12px; }
+    .footer-col ul li a { font-size: 14px; font-weight: 300; color: var(--text-secondary); text-decoration: none; transition: all 0.3s ease; }
+    .footer-col ul li a:hover { color: var(--primary); padding-left: 4px; }
+    .footer-bottom { max-width: 1200px; margin: 40px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-bottom p { font-size: 13px; color: var(--text-muted); }
+    .footer-bottom a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s ease; }
+    .footer-bottom a:hover { color: var(--primary); }
+
+    .scroll-reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
+    .scroll-reveal.revealed { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 1024px) {
+      .categories-grid, .reviews-grid { grid-template-columns: repeat(2, 1fr); }
+      .trust-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .orbital-system { display: none; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .mobile-menu-btn { display: flex; }
+      .categories-grid, .reviews-grid { grid-template-columns: 1fr; }
+      .trust-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+      .cta-container { padding: 50px 30px; }
+      body { cursor: auto; }
+      
+    }
+  </style>
+<base target="_blank">
+<base target="_blank">
+</head>
+<body>
+
+  <!-- Background Mesh Canvas -->
+  <canvas id="mesh-canvas"></canvas>
+  <div class="grid-overlay"></div>
+
+  
+
+  <!-- Neural Ticker -->
+  <div class="ticker-wrap">
+    <div class="ticker" id="ticker">
+      <div class="ticker-item"><span class="pulse-dot"></span><span class="stat-value">2,847</span> parents helped this month</div>
+      <div class="ticker-item"><span class="pulse-dot"></span>Latest review: <span class="accent-value">Synthesis Tutor</span> updated today</div>
+      <div class="ticker-item"><span class="pulse-dot"></span><span class="stat-value">17</span> AI tools tested & reviewed</div>
+      <div class="ticker-item"><span class="pulse-dot"></span>Free printable: <span class="accent-value">Solar System Chart</span> now available</div>
+      <div class="ticker-item"><span class="pulse-dot"></span><span class="stat-value">200+</span> parent reviews synthesized per article</div>
+      <div class="ticker-item"><span class="pulse-dot"></span>New comparison: <span class="accent-value">Synthesis vs Khanmigo</span></div>
+      <div class="ticker-item"><span class="pulse-dot"></span><span class="stat-value">6</span> content categories live</div>
+      <div class="ticker-item"><span class="pulse-dot"></span>Trusted by parents in <span class="accent-value">42 countries</span></div>
+      <div class="ticker-item"><span class="pulse-dot"></span><span class="stat-value">2,847</span> parents helped this month</div>
+      <div class="ticker-item"><span class="pulse-dot"></span>Latest review: <span class="accent-value">Synthesis Tutor</span> updated today</div>
+      <div class="ticker-item"><span class="pulse-dot"></span><span class="stat-value">17</span> AI tools tested & reviewed</div>
+      <div class="ticker-item"><span class="pulse-dot"></span>Free printable: <span class="accent-value">Solar System Chart</span> now available</div>
+      <div class="ticker-item"><span class="pulse-dot"></span><span class="stat-value">200+</span> parent reviews synthesized per article</div>
+      <div class="ticker-item"><span class="pulse-dot"></span>New comparison: <span class="accent-value">Synthesis vs Khanmigo</span></div>
+      <div class="ticker-item"><span class="pulse-dot"></span><span class="stat-value">6</span> content categories live</div>
+      <div class="ticker-item"><span class="pulse-dot"></span>Trusted by parents in <span class="accent-value">42 countries</span></div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="nav-logo">
+      <svg viewBox="0 0 68 68" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="navIconG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00e5c3"/><stop offset="100%" stop-color="#8b80ff"/></linearGradient>
+          <radialGradient id="navHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00e5c3" stop-opacity="0.18"/><stop offset="100%" stop-color="#00e5c3" stop-opacity="0"/></radialGradient>
+        </defs>
+        <ellipse cx="34" cy="34" rx="46" ry="46" fill="url(#navHalo)"/>
+        <rect width="68" height="68" rx="19" fill="#0d1828" stroke="#1a2840" stroke-width="1"/>
+        <line x1="34" y1="34" x2="16" y2="16" stroke="#00e5c3" stroke-width="1.2" stroke-opacity="0.55"/>
+        <line x1="34" y1="34" x2="52" y2="16" stroke="#00e5c3" stroke-width="1.2" stroke-opacity="0.45"/>
+        <line x1="34" y1="34" x2="10" y2="38" stroke="#8b80ff" stroke-width="1.0" stroke-opacity="0.55"/>
+        <line x1="34" y1="34" x2="58" y2="44" stroke="#8b80ff" stroke-width="1.0" stroke-opacity="0.45"/>
+        <line x1="34" y1="34" x2="24" y2="56" stroke="#00e5c3" stroke-width="0.9" stroke-opacity="0.42"/>
+        <line x1="34" y1="34" x2="50" y2="58" stroke="#8b80ff" stroke-width="0.9" stroke-opacity="0.38"/>
+        <line x1="16" y1="16" x2="52" y2="16" stroke="#00e5c3" stroke-width="0.5" stroke-opacity="0.16"/>
+        <line x1="10" y1="38" x2="24" y2="56" stroke="#8b80ff" stroke-width="0.5" stroke-opacity="0.14"/>
+        <circle cx="16" cy="16" r="4.5" fill="#00e5c3" fill-opacity="0.95"/><circle cx="16" cy="16" r="8" fill="#00e5c3" fill-opacity="0.1"/>
+        <circle cx="52" cy="16" r="3.8" fill="#00e5c3" fill-opacity="0.75"/>
+        <circle cx="10" cy="38" r="3.2" fill="#8b80ff" fill-opacity="0.85"/>
+        <circle cx="58" cy="44" r="3.2" fill="#8b80ff" fill-opacity="0.62"/>
+        <circle cx="24" cy="56" r="2.6" fill="#00e5c3" fill-opacity="0.62"/>
+        <circle cx="50" cy="58" r="2.6" fill="#8b80ff" fill-opacity="0.52"/>
+        <circle cx="34" cy="34" r="15" fill="none" stroke="#00e5c3" stroke-width="0.6" stroke-opacity="0.25"/>
+        <circle cx="34" cy="34" r="11" fill="url(#navIconG)"/>
+        <path d="M32.5 27 L30 34 L33.5 34 L34.5 41 L37.5 33 L34 33 L36.5 27 Z" fill="#06080f" opacity="0.92"/>
+      </svg>
+      <span class="nav-logo-text">Spark<span>Nest</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#categories">Categories</a></li>
+      <li><a href="review-template.html">Reviews</a></li>
+      <li><a href="age-guide-5.html">Guides</a></li>
+      <li><a href="printables.html">Printables</a></li>
+      <li><a href="shop.html">Shop</a></li>
+    </ul>
+    <button class="nav-cta">Get Started</button>
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="orbital-system" id="orbitalSystem">
+      <div class="orbital-center">
+        <div class="glow-ring"></div>
+        <div class="glow-ring"></div>
+        <div class="glow-ring"></div>
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="heroIconG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00e5c3"/><stop offset="100%" stop-color="#8b80ff"/></linearGradient>
+            <radialGradient id="heroHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00e5c3" stop-opacity="0.25"/><stop offset="100%" stop-color="#00e5c3" stop-opacity="0"/></radialGradient>
+          </defs>
+          <ellipse cx="60" cy="60" rx="80" ry="80" fill="url(#heroHalo)"/>
+          <rect x="10" y="10" width="100" height="100" rx="28" fill="#0d1828" stroke="#1a2840" stroke-width="1.5"/>
+          <line x1="60" y1="60" x2="28" y2="28" stroke="#00e5c3" stroke-width="2" stroke-opacity="0.55"/>
+          <line x1="60" y1="60" x2="92" y2="28" stroke="#00e5c3" stroke-width="2" stroke-opacity="0.45"/>
+          <line x1="60" y1="60" x2="18" y2="67" stroke="#8b80ff" stroke-width="1.6" stroke-opacity="0.55"/>
+          <line x1="60" y1="60" x2="102" y2="78" stroke="#8b80ff" stroke-width="1.6" stroke-opacity="0.45"/>
+          <line x1="60" y1="60" x2="42" y2="99" stroke="#00e5c3" stroke-width="1.4" stroke-opacity="0.42"/>
+          <line x1="60" y1="60" x2="88" y2="102" stroke="#8b80ff" stroke-width="1.4" stroke-opacity="0.38"/>
+          <line x1="28" y1="28" x2="92" y2="28" stroke="#00e5c3" stroke-width="0.8" stroke-opacity="0.16"/>
+          <line x1="18" y1="67" x2="42" y2="99" stroke="#8b80ff" stroke-width="0.8" stroke-opacity="0.14"/>
+          <circle cx="28" cy="28" r="6.5" fill="#00e5c3" fill-opacity="0.95"/><circle cx="28" cy="28" r="12" fill="#00e5c3" fill-opacity="0.1"/>
+          <circle cx="92" cy="28" r="5.5" fill="#00e5c3" fill-opacity="0.75"/>
+          <circle cx="18" cy="67" r="4.5" fill="#8b80ff" fill-opacity="0.85"/>
+          <circle cx="102" cy="78" r="4.5" fill="#8b80ff" fill-opacity="0.62"/>
+          <circle cx="42" cy="99" r="3.8" fill="#00e5c3" fill-opacity="0.62"/>
+          <circle cx="88" cy="102" r="3.8" fill="#8b80ff" fill-opacity="0.52"/>
+          <circle cx="60" cy="60" r="22" fill="none" stroke="#00e5c3" stroke-width="0.9" stroke-opacity="0.25"/>
+          <circle cx="60" cy="60" r="16" fill="url(#heroIconG)"/>
+          <path d="M57 37 L53 50 L58 50 L59 62 L64 48 L58 48 L62 37 Z" fill="#06080f" opacity="0.92"/>
+        </svg>
+      </div>
+      <div class="orbit-ring r1"></div>
+      <div class="orbit-ring r2"></div>
+      <div class="orbit-ring r3"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        <span>AI-Powered Learning Discovery</span>
+      </div>
+      <h1>
+        The future of<br>
+        <span class="gradient-text" id="typewriter">children's learning</span><span class="cursor-blink"></span><br>
+        starts here
+      </h1>
+      <p class="hero-subtitle">
+        Honest, deeply researched reviews of AI tutors, educational toys, and learning resources.
+        Every recommendation backed by 200+ real parent experiences.
+      </p>
+      <div class="hero-ctas">
+        <a href="#categories" class="btn-primary">
+          Explore Categories
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <a href="review-template.html" class="btn-secondary">
+          Read Reviews
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Strip -->
+  <section class="trust-strip">
+    <div class="trust-grid">
+      <div class="trust-item scroll-reveal">
+        <div class="trust-number" data-target="17">0</div>
+        <div class="trust-label">AI Tools Reviewed</div>
+      </div>
+      <div class="trust-item scroll-reveal">
+        <div class="trust-number" data-target="200">0</div>
+        <div class="trust-label">Parent Reviews per Article</div>
+      </div>
+      <div class="trust-item scroll-reveal">
+        <div class="trust-number" data-target="42">0</div>
+        <div class="trust-label">Countries Reached</div>
+      </div>
+      <div class="trust-item scroll-reveal">
+        <div class="trust-number" data-target="2847">0</div>
+        <div class="trust-label">Parents Helped This Month</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="section" id="categories">
+    <div class="section-header scroll-reveal">
+      <div class="section-label">Explore</div>
+      <h2 class="section-title">Six paths to <span class="gradient-text">brighter minds</span></h2>
+      <p class="section-desc">Every category is built on honest research. No paid placements. No hidden agendas. Just parents helping parents.</p>
+    </div>
+    <div class="categories-grid">
+      <!-- AI Learning Tools -->
+      <div class="category-card scroll-reveal" data-tilt>
+        <div class="card-glow"></div>
+        <div class="category-icon" style="background: rgba(0,229,195,0.1);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00e5c3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/><path d="M9 21h6"/></svg>
+        </div>
+        <h3>AI Learning Tools</h3>
+        <p>AI tutors and edtech platforms that adapt to your child. From math coaches to language tutors — tested and ranked.</p>
+        <a href="review-template.html" class="card-link">
+          Explore AI Tools
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <!-- Educational Toys -->
+      <div class="category-card scroll-reveal" data-tilt>
+        <div class="card-glow"></div>
+        <div class="category-icon" style="background: rgba(139,128,255,0.1);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8b80ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <h3>Educational Toys</h3>
+        <p>STEM boxes, building kits, and brain-building toys. Subscription reviews, age-specific guides, and honest durability tests.</p>
+        <a href="review-kiwico.html" class="card-link">
+          Browse Toys
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <!-- Books & Courses -->
+      <div class="category-card scroll-reveal" data-tilt>
+        <div class="card-glow"></div>
+        <div class="category-icon" style="background: rgba(255,201,71,0.1);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ffc947" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h6"/></svg>
+        </div>
+        <h3>Books & Courses</h3>
+        <p>Curated reading lists and online courses for every age. From picture books to coding classes — with real parent feedback.</p>
+        <a href="#" class="card-link">
+          Discover Content
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <!-- Free Printables -->
+      <div class="category-card scroll-reveal" data-tilt>
+        <div class="card-glow"></div>
+        <div class="category-icon" style="background: rgba(0,229,195,0.1);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00e5c3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <h3>Free Printables</h3>
+        <p>Alphabet charts, multiplication tables, world maps, solar system posters. Zero friction — no email, no account, instant download.</p>
+        <a href="printables.html" class="card-link">
+          Download Free
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <!-- SparkNest Shop -->
+      <div class="category-card scroll-reveal" data-tilt>
+        <div class="card-glow"></div>
+        <div class="category-icon" style="background: rgba(139,128,255,0.1);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8b80ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        </div>
+        <h3>SparkNest Shop</h3>
+        <p>Print-on-demand merchandise designed for curious kids and passionate teachers. T-shirts, mugs, posters, stickers — zero inventory.</p>
+        <a href="shop.html" class="card-link">
+          Visit Shop
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <!-- Parent Guides -->
+      <div class="category-card scroll-reveal" data-tilt>
+        <div class="card-glow"></div>
+        <div class="category-icon" style="background: rgba(255,201,71,0.1);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ffc947" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <h3>Parent Guides</h3>
+        <p>Age-specific buying guides that save hours of research. "Best AI tools for a 6-year-old" — written for real parents, not algorithms.</p>
+        <a href="age-guide-5.html" class="card-link">
+          Read Guides
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Reviews -->
+  <section class="section" id="reviews">
+    <div class="section-header scroll-reveal">
+      <div class="section-label">Latest Reviews</div>
+      <h2 class="section-title">Deeply researched. <span class="gradient-text">Brutally honest.</span></h2>
+      <p class="section-desc">Every review synthesizes 200+ real parent experiences. We test free trials, read the fine print, and never hide the weaknesses.</p>
+    </div>
+    <div class="reviews-grid">
+      <!-- Synthesis Tutor -->
+      <div class="review-card scroll-reveal" data-tilt>
+        <div class="review-image">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00e5c3" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        </div>
+        <div class="review-content">
+          <span class="review-tag">AI Tool</span>
+          <h3>Synthesis Tutor</h3>
+          <div class="review-meta">
+            <div class="stars">
+              <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="#2a3a55" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <span>4.2 / 5</span>
+          </div>
+          <p class="review-excerpt">The best AI math tutor for ages 5-10. Adaptive difficulty that actually works. Weakness: limited language coverage and no offline mode.</p>
+          <a href="review-synthesis-tutor.html" class="review-cta">
+            Read Full Review
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- KiwiCo -->
+      <div class="review-card scroll-reveal" data-tilt>
+        <div class="review-image">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8b80ff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div>
+        <div class="review-content">
+          <span class="review-tag toy">Toy / Subscription</span>
+          <h3>KiwiCo STEM Boxes</h3>
+          <div class="review-meta">
+            <div class="stars">
+              <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <span>4.7 / 5</span>
+          </div>
+          <p class="review-excerpt">Monthly STEM projects that kids actually finish. Koala (ages 2-5) and Tinker (9+) are standout lines. Weakness: some projects need adult help.</p>
+          <a href="review-kiwico.html" class="review-cta">
+            Read Full Review
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Khanmigo -->
+      <div class="review-card scroll-reveal" data-tilt>
+        <div class="review-image">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00e5c3" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <div class="review-content">
+          <span class="review-tag">AI Tool</span>
+          <h3>Khanmigo by Khan Academy</h3>
+          <div class="review-meta">
+            <div class="stars">
+              <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="#2a3a55" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <span>4.1 / 5</span>
+          </div>
+          <p class="review-excerpt">Khan Academy's AI tutor. Great for homework help and Socratic questioning. Weakness: still in beta, occasional inaccurate answers in advanced topics.</p>
+          <a href="review-khanmigo.html" class="review-cta">
+            Read Full Review
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section" id="printables">
+    <div class="cta-container scroll-reveal">
+      <h2>Free resources. <span class="gradient-text">Zero friction.</span></h2>
+      <p>Alphabet charts, multiplication tables, world maps, and solar system posters. Download instantly — no email, no account, no catch.</p>
+      <a href="printables.html" class="btn-primary">
+        Browse Printables
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">
+          <svg viewBox="0 0 68 68" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="footIconG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00e5c3"/><stop offset="100%" stop-color="#8b80ff"/></linearGradient>
+            </defs>
+            <rect width="68" height="68" rx="19" fill="#0d1828" stroke="#1a2840" stroke-width="1"/>
+            <line x1="34" y1="34" x2="16" y2="16" stroke="#00e5c3" stroke-width="1.2" stroke-opacity="0.55"/>
+            <line x1="34" y1="34" x2="52" y2="16" stroke="#00e5c3" stroke-width="1.2" stroke-opacity="0.45"/>
+            <line x1="34" y1="34" x2="10" y2="38" stroke="#8b80ff" stroke-width="1.0" stroke-opacity="0.55"/>
+            <line x1="34" y1="34" x2="58" y2="44" stroke="#8b80ff" stroke-width="1.0" stroke-opacity="0.45"/>
+            <line x1="34" y1="34" x2="24" y2="56" stroke="#00e5c3" stroke-width="0.9" stroke-opacity="0.42"/>
+            <line x1="34" y1="34" x2="50" y2="58" stroke="#8b80ff" stroke-width="0.9" stroke-opacity="0.38"/>
+            <circle cx="16" cy="16" r="4.5" fill="#00e5c3" fill-opacity="0.95"/>
+            <circle cx="52" cy="16" r="3.8" fill="#00e5c3" fill-opacity="0.75"/>
+            <circle cx="10" cy="38" r="3.2" fill="#8b80ff" fill-opacity="0.85"/>
+            <circle cx="58" cy="44" r="3.2" fill="#8b80ff" fill-opacity="0.62"/>
+            <circle cx="24" cy="56" r="2.6" fill="#00e5c3" fill-opacity="0.62"/>
+            <circle cx="50" cy="58" r="2.6" fill="#8b80ff" fill-opacity="0.52"/>
+            <circle cx="34" cy="34" r="15" fill="none" stroke="#00e5c3" stroke-width="0.6" stroke-opacity="0.25"/>
+            <circle cx="34" cy="34" r="11" fill="url(#footIconG)"/>
+            <path d="M32.5 27 L30 34 L33.5 34 L34.5 41 L37.5 33 L34 33 L36.5 27 Z" fill="#06080f" opacity="0.92"/>
+          </svg>
+          <span class="footer-logo-text">Spark<span>Nest</span></span>
+        </a>
+        <p>The future of children's learning starts here. Honest reviews, free resources, and parent-trusted recommendations since 2026.</p>
+        <div class="social-links">
+          <a href="#" aria-label="Twitter">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="#" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Categories</h4>
+        <ul>
+          <li><a href="index.html#categories">AI Learning Tools</a></li>
+          <li><a href="index.html#categories">Educational Toys</a></li>
+          <li><a href="index.html#categories">Books & Courses</a></li>
+          <li><a href="printables.html">Free Printables</a></li>
+          <li><a href="age-guide-5.html">Parent Guides</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="review-template.html">All Reviews</a></li>
+          <li><a href="comparison-synthesis-vs-khanmigo.html">Comparisons</a></li>
+          <li><a href="age-guide-5.html">Age Guides</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="privacy-policy.html">Privacy Policy</a></li>
+          <li><a href="privacy-policy.html">Affiliate Disclosure</a></li>
+          <li><a href="privacy-policy.html">Terms of Use</a></li>
+          <li><a href="about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>SparkNest is a participant in the Amazon Services LLC Associates Program and other affiliate programs. We earn from qualifying purchases.</p>
+      <p>SparkNest &copy; 2026. Built with curiosity.</p>
+    </div>
+  </footer>
+
+  <script>
+    // ─── Background Mesh Animation ───
+    const canvas = document.getElementById('mesh-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const blobs = [
+      { x: 0.3, y: 0.3, r: 0.4, color: 'rgba(0, 229, 195, 0.04)', vx: 0.0003, vy: 0.0002 },
+      { x: 0.7, y: 0.6, r: 0.35, color: 'rgba(139, 128, 255, 0.03)', vx: -0.0002, vy: 0.0003 },
+      { x: 0.5, y: 0.8, r: 0.3, color: 'rgba(0, 229, 195, 0.025)', vx: 0.0002, vy: -0.0002 },
+      { x: 0.2, y: 0.7, r: 0.25, color: 'rgba(139, 128, 255, 0.02)', vx: -0.0003, vy: -0.0001 }
+    ];
+
+    function drawMesh() {
+      ctx.clearRect(0, 0, width, height);
+      blobs.forEach(b => {
+        b.x += b.vx;
+        b.y += b.vy;
+        if (b.x < -0.2 || b.x > 1.2) b.vx *= -1;
+        if (b.y < -0.2 || b.y > 1.2) b.vy *= -1;
+        const gradient = ctx.createRadialGradient(b.x * width, b.y * height, 0, b.x * width, b.y * height, b.r * Math.max(width, height));
+        gradient.addColorStop(0, b.color);
+        gradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+      });
+      requestAnimationFrame(drawMesh);
+    }
+    drawMesh();
+
+    // ─── Custom Cursor ───
+    // Custom cursor effects disabled - using native cursor for better compatibility
+    // Mouse position tracking for other effects if needed
+    let mouseX = 0, mouseY = 0;
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    // ─── Navbar Scroll Effect ───
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) navbar.classList.add('scrolled');
+      else navbar.classList.remove('scrolled');
+    });
+
+    // ─── Scroll Reveal ───
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.scroll-reveal').forEach(el => revealObserver.observe(el));
+
+    // ─── Animated Counters ───
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.dataset.target);
+          const duration = 2000;
+          const start = performance.now();
+          function updateCounter(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.floor(eased * target).toLocaleString();
+            if (progress < 1) requestAnimationFrame(updateCounter);
+          }
+          requestAnimationFrame(updateCounter);
+          counterObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.trust-number').forEach(el => counterObserver.observe(el));
+
+    // ─── 3D Card Tilt ───
+    document.querySelectorAll('[data-tilt]').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / 20;
+        const rotateY = (centerX - x) / 20;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+
+    // ─── Orbital Animation ───
+    const orbitalSystem = document.getElementById('orbitalSystem');
+    let orbitAngle = 0;
+    function animateOrbit() {
+      orbitAngle += 0.002;
+      if (orbitalSystem) {
+        const rings = orbitalSystem.querySelectorAll('.orbit-ring');
+        rings.forEach((ring, i) => {
+          ring.style.transform = `translate(-50%, -50%) rotate(${orbitAngle * (i + 1) * 10}deg)`;
+        });
+      }
+      requestAnimationFrame(animateOrbit);
+    }
+    animateOrbit();
+
+    // ─── Smooth Scroll for Nav Links ───
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+</body>
+</html>
