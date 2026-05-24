@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://rehankashif4400-cyber.github.io/SparkNest/sitemap.xml
