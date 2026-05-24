@@ -88,7 +88,8 @@
       padding: 14px 32px; background: rgba(13,20,32,0.6); backdrop-filter: blur(20px);
       border: 1px solid var(--border); border-radius: 16px; transition: all 0.4s ease;
     }
-    .navbar.scrolled { top: 16px; background: rgba(13,20,32,0.9); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+    .navbar { z-index: 999 !important; }
+.navbar.scrolled { top: 16px; background: rgba(13,20,32,0.95); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
     .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
     .nav-logo svg { width: 42px; height: 42px; }
     .nav-logo-text { font-family: 'Syne', serif; font-size: 22px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.8px; }
@@ -509,8 +510,9 @@
         <h4>Legal</h4>
         <ul>
           <li><a href="privacy-policy.html">Privacy Policy</a></li>
-          <li><a href="privacy-policy.html">Affiliate Disclosure</a></li>
-          <li><a href="privacy-policy.html">Terms of Use</a></li>
+          <li><a href="affiliate-disclosure.html">Affiliate Disclosure</a></li>
+          <li><a href="terms-of-use.html">Terms of Use</a></li>
+          <li><a href="editorial-standards.html">Editorial Standards</a></li>
           <li><a href="about.html#contact">Contact</a></li>
         </ul>
       </div>

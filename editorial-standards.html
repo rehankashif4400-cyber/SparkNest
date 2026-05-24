@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-      <!-- Google Analytics 4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -10,10 +9,10 @@
     gtag('config', 'GA_MEASUREMENT_ID');
   </script>
   <meta charset="UTF-8">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SparkNest — Review Template</title>
-  <meta name="description" content="Honest, deeply researched review template. Replace with actual product name and description.">
+  <title>Editorial Standards — SparkNest</title>
+  <meta name="description" content="How SparkNest evaluates AI learning tools, educational toys, and resources for kids. Our standards for honest, parent-tested reviews.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
@@ -46,7 +45,6 @@
       background: var(--void);
       color: var(--text-primary);
       overflow-x: hidden;
-      cursor: auto;
       min-height: 100vh;
     }
 
@@ -62,8 +60,6 @@
       mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
       -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
     }
-
-    
 
     .ticker-wrap {
       width: 100%; overflow: hidden; background: rgba(6,8,15,0.95);
@@ -83,13 +79,12 @@
 
     .navbar {
       position: fixed; top: 42px; left: 50%; transform: translateX(-50%);
-      width: calc(100% - 40px); max-width: 1400px; z-index: 200;
+      width: calc(100% - 40px); max-width: 1400px; z-index: 999;
       display: flex; align-items: center; justify-content: space-between;
       padding: 14px 32px; background: rgba(13,20,32,0.6); backdrop-filter: blur(20px);
       border: 1px solid var(--border); border-radius: 16px; transition: all 0.4s ease;
     }
-    .navbar { z-index: 999 !important; }
-.navbar.scrolled { top: 16px; background: rgba(13,20,32,0.95); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+    .navbar.scrolled { top: 16px; background: rgba(13,20,32,0.95); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
     .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
     .nav-logo svg { width: 42px; height: 42px; }
     .nav-logo-text { font-family: 'Syne', serif; font-size: 22px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.8px; }
@@ -107,13 +102,13 @@
     .nav-cta {
       padding: 10px 24px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500;
       color: var(--void); background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border: none; border-radius: 12px; cursor: auto; position: relative; overflow: hidden;
+      border: none; border-radius: 12px; cursor: pointer; position: relative; overflow: hidden;
       transition: all 0.3s ease; letter-spacing: 0.5px; text-decoration: none; display: inline-flex; align-items: center;
     }
     .nav-cta::after { content: ''; position: absolute; inset: -2px; border-radius: 14px; background: linear-gradient(135deg, var(--primary), var(--secondary)); opacity: 0; filter: blur(12px); transition: opacity 0.3s ease; z-index: -1; }
     .nav-cta:hover { transform: translateY(-2px); box-shadow: var(--glow-primary); }
     .nav-cta:hover::after { opacity: 0.6; }
-    .mobile-menu-btn { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: auto; padding: 8px; }
+    .mobile-menu-btn { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; }
     .mobile-menu-btn span { display: block; width: 24px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: all 0.3s ease; }
 
     .page-hero {
@@ -128,80 +123,46 @@
       margin-bottom: 24px; letter-spacing: 0.5px; backdrop-filter: blur(10px);
     }
     .page-hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); animation: pulse-dot 2s ease-in-out infinite; box-shadow: 0 0 8px var(--primary); }
-    .page-hero h1 { font-family: 'Syne', serif; font-size: clamp(32px, 5vw, 56px); font-weight: 800; line-height: 1.1; letter-spacing: -2px; margin-bottom: 16px; color: var(--text-primary); }
+    .page-hero h1 { font-family: 'Syne', serif; font-size: clamp(32px, 5vw, 56px); font-weight: 800; line-height: 1.1; letter-spacing: -2px; margin-bottom: 20px; color: var(--text-primary); }
     .page-hero h1 .gradient-text { background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .page-hero-subtitle { font-size: clamp(15px, 2vw, 18px); font-weight: 300; color: var(--text-secondary); line-height: 1.7; max-width: 600px; margin: 0 auto; letter-spacing: 0.2px; }
 
-    .article-layout { max-width: 1200px; margin: 0 auto; padding: 0 24px 80px; display: grid; grid-template-columns: 280px 1fr; gap: 60px; position: relative; z-index: 2; }
-    .toc-sidebar { position: sticky; top: 120px; height: fit-content; }
-    .toc-sidebar h4 { font-family: 'Syne', serif; font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px; letter-spacing: 0.5px; }
-    .toc { list-style: none; }
-    .toc li { margin-bottom: 8px; }
-    .toc a { display: block; padding: 8px 12px; font-size: 14px; font-weight: 300; color: var(--text-secondary); text-decoration: none; border-radius: 8px; transition: all 0.3s ease; border-left: 2px solid transparent; }
-    .toc a:hover { color: var(--text-primary); background: var(--surface-elevated); border-left-color: var(--primary); }
-    .toc a.active { color: var(--primary); background: var(--primary-dim); border-left-color: var(--primary); }
+    .section { position: relative; z-index: 2; padding: 60px 24px; }
+    .breadcrumbs { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+    .breadcrumbs a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s ease; }
+    .breadcrumbs a:hover { color: var(--primary); }
+    .breadcrumbs .sep { color: var(--text-muted); }
 
-    .article-content { max-width: 700px; }
-    .article-content h2 { font-family: 'Syne', serif; font-size: 28px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.8px; color: var(--text-primary); }
-    .article-content h3 { font-family: 'Syne', serif; font-size: 20px; font-weight: 700; margin: 32px 0 12px; color: var(--primary); letter-spacing: -0.5px; }
-    .article-content p { font-size: 15px; font-weight: 300; color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px; }
-    .article-content ul { list-style: none; margin-bottom: 20px; }
-    .article-content ul li { font-size: 15px; font-weight: 300; color: var(--text-secondary); line-height: 1.8; padding-left: 24px; position: relative; margin-bottom: 8px; }
-    .article-content ul li::before { content: ''; position: absolute; left: 0; top: 10px; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); opacity: 0.6; }
-    .article-content strong { color: var(--text-primary); font-weight: 500; }
-
-    .rating-box {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
-      padding: 32px; margin: 32px 0; text-align: center;
+    .content-block {
+      max-width: 900px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 24px; padding: 48px; position: relative; overflow: hidden;
     }
-    .rating-box .rating-number { font-family: 'Syne', serif; font-size: 64px; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; }
-    .rating-box .rating-label { font-size: 14px; color: var(--text-secondary); margin-top: 8px; }
-    .rating-box .rating-stars { display: flex; gap: 4px; justify-content: center; margin-top: 12px; }
-    .rating-box .rating-stars svg { width: 20px; height: 20px; }
-
-    .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 32px 0; }
-    .pros-cons .box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
-    .pros-cons .box h4 { font-family: 'Syne', serif; font-size: 16px; font-weight: 700; margin-bottom: 16px; }
-    .pros-cons .pros h4 { color: var(--primary); }
-    .pros-cons .cons h4 { color: var(--secondary); }
-    .pros-cons .box ul { list-style: none; }
-    .pros-cons .box ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 8px; padding-left: 20px; position: relative; }
-    .pros-cons .pros ul li::before { content: '✓'; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
-    .pros-cons .cons ul li::before { content: '✗'; position: absolute; left: 0; color: var(--secondary); font-weight: 700; }
-
-    .article-cta {
-      background: linear-gradient(135deg, var(--primary-dim), var(--secondary-dim));
-      border: 1px solid rgba(0,229,195,0.15); border-radius: 20px;
-      padding: 40px; margin: 48px 0; text-align: center;
+    .content-block h2 { font-family: 'Syne', serif; font-size: 28px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.8px; }
+    .content-block h3 { font-family: 'Syne', serif; font-size: 20px; font-weight: 700; margin: 32px 0 12px; color: var(--primary); letter-spacing: -0.5px; }
+    .content-block p { font-size: 15px; font-weight: 300; color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px; }
+    .content-block ul { list-style: none; margin-bottom: 20px; }
+    .content-block ul li { font-size: 15px; font-weight: 300; color: var(--text-secondary); line-height: 1.8; padding-left: 24px; position: relative; margin-bottom: 8px; }
+    .content-block ul li::before { content: ''; position: absolute; left: 0; top: 10px; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); opacity: 0.6; }
+    .content-block .highlight-box {
+      background: var(--primary-dim); border: 1px solid rgba(0,229,195,0.15);
+      border-radius: 16px; padding: 24px; margin: 24px 0;
     }
-    .article-cta h3 { font-family: 'Syne', serif; font-size: 24px; font-weight: 700; margin-bottom: 12px; }
-    .article-cta p { color: var(--text-secondary); margin-bottom: 24px; }
+    .content-block .highlight-box p { color: var(--text-primary); margin-bottom: 0; }
 
-    .btn-primary {
-      position: relative; padding: 16px 36px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500;
-      color: var(--void); background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border: none; border-radius: 14px; cursor: auto; overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.16,1,0.3,1); letter-spacing: 0.5px; text-decoration: none;
-      display: inline-flex; align-items: center; gap: 8px;
+    .standard-card {
+      max-width: 900px; margin: 0 auto 24px; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 36px; transition: all 0.4s ease;
     }
-    .btn-primary::before { content: ''; position: absolute; inset: -3px; border-radius: 16px; background: linear-gradient(135deg, var(--primary), var(--secondary)); opacity: 0; filter: blur(16px); transition: opacity 0.4s ease; z-index: -1; }
-    .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: var(--glow-primary); }
-    .btn-primary:hover::before { opacity: 0.5; }
-
-    .related-section { padding: 80px 24px; position: relative; z-index: 2; border-top: 1px solid var(--border); }
-    .related-header { max-width: 1200px; margin: 0 auto 40px; display: flex; justify-content: space-between; align-items: center; }
-    .related-header h2 { font-family: 'Syne', serif; font-size: 28px; font-weight: 700; letter-spacing: -0.8px; }
-    .related-header a { font-size: 14px; color: var(--primary); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
-    .related-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .related-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; transition: all 0.4s ease; cursor: auto; text-decoration: none; display: block; }
-    .related-card:hover { transform: translateY(-4px); border-color: rgba(0,229,195,0.2); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
-    .related-card .tag { display: inline-block; padding: 4px 12px; background: var(--primary-dim); border: 1px solid rgba(0,229,195,0.15); border-radius: 100px; font-size: 11px; font-weight: 500; color: var(--primary); margin-bottom: 12px; }
-    .related-card h4 { font-family: 'Syne', serif; font-size: 18px; font-weight: 700; margin-bottom: 8px; color: var(--text-primary); }
-    .related-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+    .standard-card:hover { border-color: rgba(0,229,195,0.2); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+    .standard-card h3 { font-family: 'Syne', serif; font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--primary); letter-spacing: -0.5px; }
+    .standard-card p { font-size: 14px; font-weight: 300; color: var(--text-secondary); line-height: 1.7; margin-bottom: 12px; }
+    .standard-card ul { list-style: none; }
+    .standard-card ul li { font-size: 14px; font-weight: 300; color: var(--text-secondary); line-height: 1.7; padding-left: 20px; position: relative; margin-bottom: 6px; }
+    .standard-card ul li::before { content: ''; position: absolute; left: 0; top: 9px; width: 6px; height: 6px; border-radius: 50%; background: var(--secondary); opacity: 0.6; }
 
     .footer { position: relative; z-index: 2; padding: 60px 24px 40px; border-top: 1px solid var(--border); background: rgba(6,8,15,0.8); }
     .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; }
-    .footer-brand .footer-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; text-decoration: none; }
+    .footer-brand .footer-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
     .footer-brand .footer-logo svg { width: 36px; height: 36px; }
     .footer-brand .footer-logo-text { font-family: 'Syne', serif; font-size: 20px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; }
     .footer-brand .footer-logo-text span { background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
@@ -223,35 +184,23 @@
     .scroll-reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
     .scroll-reveal.revealed { opacity: 1; transform: translateY(0); }
 
-    .breadcrumbs { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--text-muted); margin-bottom: 20px; position: relative; z-index: 2; }
-    .breadcrumbs a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s ease; }
-    .breadcrumbs a:hover { color: var(--primary); }
-    .breadcrumbs .sep { color: var(--text-muted); }
-
     @media (max-width: 1024px) {
-      .article-layout { grid-template-columns: 1fr; }
-      .toc-sidebar { display: none; }
-      .pros-cons { grid-template-columns: 1fr; }
-      .related-grid { grid-template-columns: repeat(2, 1fr); }
       .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
     }
     @media (max-width: 768px) {
       .nav-links { display: none; }
       .nav-cta { display: none; }
       .mobile-menu-btn { display: flex; }
-      .related-grid { grid-template-columns: 1fr; }
       .footer-grid { grid-template-columns: 1fr; gap: 30px; }
-      body { cursor: auto; }
-      
+      .content-block { padding: 28px; }
+      .standard-card { padding: 24px; }
     }
   </style>
-<base target="_blank">
 <base target="_blank">
 </head>
 <body>
   <canvas id="mesh-canvas"></canvas>
   <div class="grid-overlay"></div>
-  
 
   <div class="ticker-wrap">
     <div class="ticker" id="ticker">
@@ -304,153 +253,128 @@
       <span class="nav-logo-text">Spark<span>Nest</span></span>
     </a>
     <ul class="nav-links">
-      <li><a href="index.html#categories">Categories</a></li>
-      <li><a href="review-template.html">Reviews</a></li>
-      <li><a href="age-guide-5.html">Guides</a></li>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+      <li><a href="#guides">Guides</a></li>
       <li><a href="printables.html">Printables</a></li>
       <li><a href="shop.html">Shop</a></li>
     </ul>
     <a href="about.html" class="nav-cta">Get Started</a>
-    <button class="mobile-menu-btn" id="mobileMenuBtn">
-      <span></span><span></span><span></span>
-    </button>
+    <button class="mobile-menu-btn" id="mobileMenuBtn"><span></span><span></span><span></span></button>
   </nav>
 
   <section class="page-hero">
     <div class="page-hero-content">
       <div class="page-hero-badge">
         <span class="dot"></span>
-        <span>Review Template</span>
+        <span>How We Work</span>
       </div>
-      <h1>Product Name <span class="gradient-text">Review</span></h1>
-      <p class="page-hero-subtitle">Replace this with your product description. This is the review template page — clone it for each new product review.</p>
+      <h1>Our <span class="gradient-text">Editorial Standards</span></h1>
+      <p class="page-hero-subtitle">Every recommendation on SparkNest is researched, tested, and evaluated against real parent needs. No hype. No sponsorship bias. Just honest guidance.</p>
     </div>
   </section>
 
   <div class="breadcrumbs">
     <a href="index.html">Home</a>
     <span class="sep">/</span>
-    <a href="review-template.html">Reviews</a>
-    <span class="sep">/</span>
-    <span style="color:var(--primary)">Product Name</span>
+    <span style="color:var(--primary)">Editorial Standards</span>
   </div>
 
-  <div class="article-layout">
-    <aside class="toc-sidebar">
-      <h4>Table of Contents</h4>
-      <ul class="toc">
-        <li><a href="#overview">Overview</a></li>
-        <li><a href="#features">Key Features</a></li>
-        <li><a href="#pros-cons">Pros & Cons</a></li>
-        <li><a href="#pricing">Pricing</a></li>
-        <li><a href="#verdict">Final Verdict</a></li>
-      </ul>
-    </aside>
-
-    <article class="article-content">
-      <h2 id="overview">Overview</h2>
-      <p>Replace this section with your product overview. Describe what the product is, who it's for, and what problem it solves. Keep it concise but informative — parents are busy.</p>
-      <p>Add a second paragraph with context about the market category and why this product stands out (or doesn't).</p>
-
-      <div class="rating-box scroll-reveal">
-        <div class="rating-number">4.5</div>
-        <div class="rating-label">out of 5</div>
-        <div class="rating-stars">
-          <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="#ffc947" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="none" stroke="#2a3a55" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </div>
+  <section class="section">
+    <div class="content-block scroll-reveal">
+      <h2>What We Believe</h2>
+      <p>Parents are overwhelmed by AI tools, educational apps, and learning platforms. Every company claims their product is "revolutionary." We cut through the noise.</p>
+      <div class="highlight-box">
+        <p>SparkNest helps parents identify what is genuinely useful, practical, and age-appropriate for their children — not what has the biggest marketing budget.</p>
       </div>
-
-      <h2 id="features">Key Features</h2>
-      <p>List the main features here. Use bullet points for scannability:</p>
-      <ul>
-        <li><strong>Feature one:</strong> Description of what it does and why it matters.</li>
-        <li><strong>Feature two:</strong> Description of what it does and why it matters.</li>
-        <li><strong>Feature three:</strong> Description of what it does and why it matters.</li>
-        <li><strong>Feature four:</strong> Description of what it does and why it matters.</li>
-      </ul>
-
-      <h2 id="pros-cons">Pros & Cons</h2>
-      <div class="pros-cons scroll-reveal">
-        <div class="box pros">
-          <h4>What Parents Love</h4>
-          <ul>
-            <li>Pro point based on real parent feedback</li>
-            <li>Another genuine positive from testing</li>
-            <li>Specific benefit that saves time or reduces stress</li>
-            <li>Unexpected advantage discovered during review</li>
-          </ul>
-        </div>
-        <div class="box cons">
-          <h4>What to Watch For</h4>
-          <ul>
-            <li>Honest weakness — we don't hide flaws</li>
-            <li>Limitation that affects some families</li>
-            <li>Pricing or subscription concern</li>
-            <li>Technical or compatibility issue</li>
-          </ul>
-        </div>
-      </div>
-
-      <h2 id="pricing">Pricing</h2>
-      <p>Describe the pricing structure clearly. Is it a one-time purchase, subscription, freemium? Include any hidden costs parents should know about.</p>
-      <p>Mention free trial availability and whether a credit card is required upfront.</p>
-
-      <h2 id="verdict">Final Verdict</h2>
-      <p><strong>Product Name is worth it if your child is [age range] and you want [specific outcome].</strong></p>
-      <p>It's not perfect — [specific weakness] — but the [specific strength] makes it a standout in the [category] space.</p>
-      <p>Our rating: <strong>4.5/5</strong> — Recommended with the caveats above.</p>
-
-      <!-- AFFILIATE LINK PLACEHOLDER - Replace href with real affiliate URL -->
-      <div class="article-cta scroll-reveal">
-        <h3>Try [Product Name] Free for 7 Days</h3>
-        <p>No credit card required. Full access to all features. Cancel anytime.</p>
-        <a href="#" class="btn-primary">
-          Start Free Trial
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </a>
-        <p style="margin-top: 16px; font-size: 12px; color: var(--text-muted);">This is an affiliate link. We earn a commission at no extra cost to you. Read our <a href="privacy-policy.html" style="color: var(--text-secondary);">affiliate disclosure</a>.</p>
-      </div>
-    </article>
-  </div>
-
-  <section class="related-section">
-    <div class="related-header">
-      <h2>More Reviews</h2>
-      <a href="review-template.html">
-        View All
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-      </a>
     </div>
-    <div class="related-grid">
-      <!-- AFFILIATE LINK PLACEHOLDER - Replace href with real review URL -->
-      <a href="review-synthesis-tutor.html" class="related-card scroll-reveal">
-        <span class="tag">AI Tool</span>
-        <h4>Synthesis Tutor</h4>
-        <p>Adaptive math tutor for ages 5-10. 4.2/5 from 200+ parent reviews.</p>
-      </a>
-      <!-- AFFILIATE LINK PLACEHOLDER - Replace href with real review URL -->
-      <a href="review-kiwico.html" class="related-card scroll-reveal">
-        <span class="tag" style="background: var(--secondary-dim); border-color: rgba(139,128,255,0.15); color: var(--secondary);">Toy</span>
-        <h4>KiwiCo STEM Boxes</h4>
-        <p>Monthly hands-on projects kids actually finish. 4.7/5 parent rating.</p>
-      </a>
-      <!-- AFFILIATE LINK PLACEHOLDER - Replace href with real review URL -->
-      <a href="review-khanmigo.html" class="related-card scroll-reveal">
-        <span class="tag">AI Tool</span>
-        <h4>Khanmigo</h4>
-        <p>Khan Academy's AI tutor. Great for homework help. 4.1/5 rating.</p>
-      </a>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="standard-card scroll-reveal">
+      <h3>Accuracy</h3>
+      <p>We prioritize factual accuracy and practical usefulness. Every claim is cross-checked against real user experiences, official documentation, and hands-on testing.</p>
+      <ul>
+        <li>Tools are tested with real children when possible</li>
+        <li>Pricing and features are verified before publishing</li>
+        <li>Updates are made when products change</li>
+      </ul>
+    </div>
+
+    <div class="standard-card scroll-reveal">
+      <h3>Originality</h3>
+      <p>We avoid generic AI-generated list content. Every review and guide is built from original analysis, structured research, and real parent feedback.</p>
+      <ul>
+        <li>Each article synthesizes 200+ real parent reviews</li>
+        <li>Comparisons are based on hands-on testing, not spec sheets</li>
+        <li>We explain WHY a tool works, not just WHAT it does</li>
+      </ul>
+    </div>
+
+    <div class="standard-card scroll-reveal">
+      <h3>Practicality</h3>
+      <p>Recommendations focus on real-world usability and workflow improvement. A tool can be technologically impressive but useless for a busy parent.</p>
+      <ul>
+        <li>We test ease of setup and daily use</li>
+        <li>Learning curve is always evaluated</li>
+        <li>Value for money is a key factor</li>
+      </ul>
+    </div>
+
+    <div class="standard-card scroll-reveal">
+      <h3>Updating</h3>
+      <p>Content is periodically reviewed and updated as technologies evolve. AI tools change fast — our reviews keep pace.</p>
+      <ul>
+        <li>Reviews include "last updated" timestamps</li>
+        <li>Major product changes trigger immediate updates</li>
+        <li>Discontinued tools are removed or archived</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="content-block scroll-reveal">
+      <h2>How We Evaluate Tools</h2>
+      <p>Every AI learning tool, educational toy, and resource on SparkNest is scored across these dimensions:</p>
+      <ul>
+        <li><strong>Usability</strong> — Can a non-technical parent set it up in under 10 minutes?</li>
+        <li><strong>Performance</strong> — Does it actually improve learning outcomes?</li>
+        <li><strong>Pricing</strong> — Is the value proportional to the cost?</li>
+        <li><strong>Privacy</strong> — Is children's data handled responsibly?</li>
+        <li><strong>Workflow Efficiency</strong> — Does it fit into a real family's routine?</li>
+        <li><strong>Learning Curve</strong> — Can a child use it independently?</li>
+        <li><strong>Long-Term Value</strong> — Does it grow with the child?</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="content-block scroll-reveal">
+      <h2>What We Avoid</h2>
+      <p>Our credibility depends on what we refuse to publish:</p>
+      <ul>
+        <li>Low-quality list spam with no real analysis</li>
+        <li>Misleading recommendations based on commission size</li>
+        <li>Exaggerated hype without evidence</li>
+        <li>Shallow comparisons that don't help parents decide</li>
+        <li>Sponsored content disguised as editorial</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="content-block scroll-reveal" style="text-align:center;">
+      <h2>Affiliate Disclosure</h2>
+      <p style="max-width:600px; margin:0 auto 20px;">Some links on SparkNest are affiliate links. If you purchase through them, we may earn a commission at no additional cost to you.</p>
+      <p style="color:var(--text-muted); font-size:14px;">Recommendations are based on research, usability, and long-term value — not commission size. We never let affiliate partnerships influence our evaluations.</p>
+      <p style="margin-top:20px;"><a href="affiliate-disclosure.html" style="color:var(--primary); text-decoration:none; font-weight:500;">Read Full Disclosure →</a></p>
     </div>
   </section>
 
   <footer class="footer">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="index.html" class="footer-logo">
+        <div class="footer-logo">
           <svg viewBox="0 0 68 68" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="footIconG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00e5c3"/><stop offset="100%" stop-color="#8b80ff"/></linearGradient>
@@ -473,7 +397,7 @@
             <path d="M32.5 27 L30 34 L33.5 34 L34.5 41 L37.5 33 L34 33 L36.5 27 Z" fill="#06080f" opacity="0.92"/>
           </svg>
           <span class="footer-logo-text">Spark<span>Nest</span></span>
-        </a>
+        </div>
         <p>The future of children's learning starts here. Honest reviews, free resources, and parent-trusted recommendations since 2026.</p>
         <div class="social-links">
           <a href="#" aria-label="Twitter">
@@ -490,19 +414,19 @@
       <div class="footer-col">
         <h4>Categories</h4>
         <ul>
-          <li><a href="index.html#categories">AI Learning Tools</a></li>
-          <li><a href="index.html#categories">Educational Toys</a></li>
-          <li><a href="index.html#categories">Books & Courses</a></li>
+          <li><a href="#">AI Learning Tools</a></li>
+          <li><a href="#">Educational Toys</a></li>
+          <li><a href="#">Books & Courses</a></li>
           <li><a href="printables.html">Free Printables</a></li>
-          <li><a href="age-guide-5.html">Parent Guides</a></li>
+          <li><a href="#">Parent Guides</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Resources</h4>
         <ul>
-          <li><a href="review-template.html">All Reviews</a></li>
-          <li><a href="comparison-synthesis-vs-khanmigo.html">Comparisons</a></li>
-          <li><a href="age-guide-5.html">Age Guides</a></li>
+          <li><a href="#">All Reviews</a></li>
+          <li><a href="#">Comparisons</a></li>
+          <li><a href="age-guide-5-year-olds.html">Age Guides</a></li>
           <li><a href="shop.html">Shop</a></li>
           <li><a href="about.html">About</a></li>
         </ul>
@@ -514,7 +438,7 @@
           <li><a href="affiliate-disclosure.html">Affiliate Disclosure</a></li>
           <li><a href="terms-of-use.html">Terms of Use</a></li>
           <li><a href="editorial-standards.html">Editorial Standards</a></li>
-          <li><a href="about.html#contact">Contact</a></li>
+          <li><a href="contact.html">Contact</a></li>
         </ul>
       </div>
     </div>
@@ -525,7 +449,6 @@
   </footer>
 
   <script>
-    // ─── Background Mesh Animation ───
     const canvas = document.getElementById('mesh-canvas');
     const ctx = canvas.getContext('2d');
     let width, height;
@@ -561,22 +484,12 @@
     }
     drawMesh();
 
-    // ─── Custom Cursor ───
-    // Custom cursor disabled — using native cursor for compatibility
-    let mouseX = 0, mouseY = 0;
-    document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-
-    // ─── Navbar Scroll Effect ───
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
       if (window.scrollY > 50) navbar.classList.add('scrolled');
       else navbar.classList.remove('scrolled');
     });
 
-    // ─── Scroll Reveal ───
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -586,30 +499,6 @@
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
     document.querySelectorAll('.scroll-reveal').forEach(el => revealObserver.observe(el));
-
-    // ─── TOC Active State ───
-    const tocLinks = document.querySelectorAll('.toc a');
-    const sections = document.querySelectorAll('.article-content [id]');
-    const tocObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          tocLinks.forEach(link => link.classList.remove('active'));
-          const activeLink = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
-          if (activeLink) activeLink.classList.add('active');
-        }
-      });
-    }, { threshold: 0.5, rootMargin: '-100px 0px -50% 0px' });
-
-    sections.forEach(section => tocObserver.observe(section));
-
-    // ─── Smooth Scroll ───
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    });
   </script>
 </body>
 </html>
